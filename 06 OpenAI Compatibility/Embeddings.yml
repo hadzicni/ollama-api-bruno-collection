@@ -1,0 +1,48 @@
+info:
+  name: Embeddings
+  type: http
+  seq: 10
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/embeddings"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{embedModel}}",
+        "input": [
+          "Erster Text",
+          "Zweiter Text"
+        ],
+        "encoding_format": "float",
+        "dimensions": 512
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Zwei Embeddings im OpenAI-Format", function () {
+          const b = res.getBody();
+          expect(b.object).to.equal("list");
+          expect(b.data).to.have.lengthOf(2);
+          expect(b.data[0].object).to.equal("embedding");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Embeddings
+
+  `encoding_format`: `"float"` oder `"base64"`. `dimensions` nur bei unterstützten Modellen.

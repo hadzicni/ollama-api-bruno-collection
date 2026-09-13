@@ -1,0 +1,51 @@
+info:
+  name: Pull Model (Streaming Progress)
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/pull"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "stream": true
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Stream liefert NDJSON", function () {
+          expect(res.getHeader("content-type")).to.contain("application/x-ndjson");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Pull Model (Streaming Progress)
+
+  Der Stream liefert Fortschrittsmeldungen:
+
+  ```
+  {"status":"pulling manifest"}
+  {"status":"pulling dde5aa3fc5ff","digest":"sha256:dde5…","total":2019377376,"completed":241970}
+  …
+  {"status":"verifying sha256 digest"}
+  {"status":"writing manifest"}
+  {"status":"success"}
+  ```
+
+  Fortschritt in % = `completed / total * 100`.

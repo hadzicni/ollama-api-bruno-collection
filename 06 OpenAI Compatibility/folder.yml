@@ -1,0 +1,29 @@
+info:
+  name: 🔌 OpenAI Compatibility
+  type: folder
+  seq: 6
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    # 🔌 OpenAI Compatibility
+
+    Ollama implementiert Teile der **OpenAI API** unter `/v1`. Bestehende OpenAI-SDKs funktionieren mit:
+
+    ```python
+    from openai import OpenAI
+    client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")  # api_key wird ignoriert
+    ```
+
+    | Endpunkt | Methode |
+    |---|---|
+    | `/v1/chat/completions` | POST |
+    | `/v1/completions` | POST |
+    | `/v1/embeddings` | POST |
+    | `/v1/models`, `/v1/models/{model}` | GET |
+    | `/v1/responses` | POST (ab v0.13.3, zustandslos) |
+
+    Die Authentifizierung (`Bearer {{apiKey}}`) wird von der Collection geerbt.
+  type: text/markdown

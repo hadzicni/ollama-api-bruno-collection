@@ -1,0 +1,121 @@
+info:
+  name: Chat (Tool Calling)
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{toolModel}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Wie ist das Wetter gerade in Zürich und wie spät ist es dort?"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_current_weather",
+              "description": "Liefert das aktuelle Wetter für eine Stadt",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string",
+                    "description": "Name der Stadt, z. B. Berlin"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "enum": [
+                      "celsius",
+                      "fahrenheit"
+                    ],
+                    "description": "Temperatureinheit"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "get_current_time",
+              "description": "Liefert die aktuelle Uhrzeit in einer Zeitzone",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "timezone": {
+                    "type": "string",
+                    "description": "IANA-Zeitzone, z. B. Europe/Berlin"
+                  }
+                },
+                "required": [
+                  "timezone"
+                ]
+              }
+            }
+          }
+        ],
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const msg = res.getBody()?.message;
+        if (msg?.tool_calls?.length) {
+          bru.setVar("toolCallMessage", JSON.stringify(msg));
+          msg.tool_calls.forEach(function (c) {
+            console.log("🔧 Tool-Call:", c.function.name, JSON.stringify(c.function.arguments));
+          });
+          console.log("➡️ Jetzt 'Chat (Tool Result)' ausführen, um die Ergebnisse zurückzugeben.");
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Modell ruft Tools auf", function () {
+          const calls = res.getBody().message.tool_calls;
+          expect(calls).to.be.an("array").and.not.be.empty;
+          expect(calls[0].function).to.have.property("name");
+          expect(calls[0].function.arguments).to.be.an("object");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat (Tool Calling)
+
+  `tools` beschreibt Funktionen per JSON-Schema. Entscheidet sich das Modell für einen Aufruf, enthält die Antwort:
+
+  ```json
+  "message": {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": [
+      { "function": { "name": "get_current_weather", "arguments": { "city": "Zürich" } } }
+    ]
+  }
+  ```
+
+  Die Assistant-Nachricht wird in `toolCallMessage` gespeichert → weiter mit **Chat (Tool Result)**.
+
+  Geeignete Modelle: `qwen3`, `llama3.1`, `gpt-oss`, `mistral-small3.2` …

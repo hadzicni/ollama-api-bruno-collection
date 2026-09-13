@@ -1,0 +1,71 @@
+info:
+  name: Messages
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/messages"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hallo! Erkläre kurz, was du bist."
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Anthropic Message-Format", function () {
+          const b = res.getBody();
+          expect(b.content).to.be.an("array");
+          expect(b.content[0].type).to.equal("text");
+          expect(b.usage).to.have.property("output_tokens");
+        });
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.type
+      operator: eq
+      value: message
+    - expression: res.body.role
+      operator: eq
+      value: assistant
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Messages
+
+  ## Response
+
+  ```json
+  {
+    "id": "msg_…",
+    "type": "message",
+    "role": "assistant",
+    "model": "llama3.2",
+    "content": [{ "type": "text", "text": "Hallo! Ich bin …" }],
+    "stop_reason": "end_turn",
+    "usage": { "input_tokens": 15, "output_tokens": 42 }
+  }
+  ```

@@ -1,0 +1,56 @@
+info:
+  name: Messages (Streaming)
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/messages"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "max_tokens": 512,
+        "stream": true,
+        "messages": [
+          {
+            "role": "user",
+            "content": "Schreibe einen Limerick über Bruno, den API-Client."
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Stream liefert Server-Sent Events", function () {
+          expect(res.getHeader("content-type")).to.contain("text/event-stream");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Messages (Streaming)
+
+  SSE-Events im Anthropic-Format:
+
+  ```
+  event: message_start
+  event: content_block_start
+  event: content_block_delta   → {"type":"text_delta","text":"…"}
+  event: content_block_stop
+  event: message_delta         → stop_reason, usage
+  event: message_stop
+  ```

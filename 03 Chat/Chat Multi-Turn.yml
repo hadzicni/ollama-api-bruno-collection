@@ -1,0 +1,63 @@
+info:
+  name: Chat (Multi-Turn Conversation)
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Du bist ein hilfreicher Reiseassistent."
+          },
+          {
+            "role": "user",
+            "content": "Ich plane einen Wochenendtrip nach Wien."
+          },
+          {
+            "role": "assistant",
+            "content": "Wunderbar! Wien bietet viel: Schloss Schönbrunn, den Stephansdom, den Naschmarkt und natürlich die Kaffeehauskultur. Was interessiert dich am meisten?"
+          },
+          {
+            "role": "user",
+            "content": "Kulinarik! Welche drei Gerichte muss ich probieren?"
+          }
+        ],
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Assistant-Nachricht vorhanden", function () {
+          const msg = res.getBody().message;
+          expect(msg.role).to.equal("assistant");
+          expect(msg.content).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat (Multi-Turn Conversation)
+
+  Ollama ist **zustandslos** – der gesamte Verlauf muss bei jedem Request mitgeschickt werden.
+  Frühere Antworten des Modells kommen als `role: "assistant"` in das Array.
+
+  👉 Siehe *Workflows → Chat-Verlauf* für einen automatisch mitwachsenden Verlauf.

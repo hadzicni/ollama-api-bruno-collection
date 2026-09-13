@@ -1,0 +1,14 @@
+info:
+  name: 🖥️ Server
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    # 🖥️ Server
+
+    Grundlegende Endpunkte zur Prüfung, ob der Ollama-Server läuft und welche Version installiert ist.
+  type: text/markdown

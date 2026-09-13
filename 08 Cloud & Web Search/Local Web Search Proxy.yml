@@ -1,0 +1,39 @@
+info:
+  name: Local Web Search Proxy (experimental)
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/experimental/web_search"
+  body:
+    type: json
+    data: |-
+      {
+        "query": "Bruno API client",
+        "max_results": 3
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Local Web Search Proxy ⚗️
+
+  `POST /api/experimental/web_search` – Der lokale Server leitet die Suche mit dem Account aus `ollama signin`
+  an ollama.com weiter (der Authorization-Header wird entfernt).
+
+  > ⚠️ Experimentell – kann sich ändern.

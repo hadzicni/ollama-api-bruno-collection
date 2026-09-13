@@ -1,0 +1,35 @@
+info:
+  name: 6 · Unload
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "bruno-lifecycle-test",
+        "keep_alive": 0
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Entladen", function () {
+          expect(res.getBody().done_reason).to.equal("unload");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

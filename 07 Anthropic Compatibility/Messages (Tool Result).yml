@@ -1,0 +1,76 @@
+info:
+  name: Messages (Tool Result)
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/messages"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{toolModel}}",
+        "max_tokens": 1024,
+        "tools": [
+          {
+            "name": "get_current_weather",
+            "description": "Liefert das aktuelle Wetter für eine Stadt",
+            "input_schema": {
+              "type": "object",
+              "properties": { "city": { "type": "string" } },
+              "required": ["city"]
+            }
+          }
+        ],
+        "messages": [
+          { "role": "user", "content": "Brauche ich heute in Berlin einen Regenschirm?" },
+          {
+            "role": "assistant",
+            "content": [
+              { "type": "tool_use", "id": "{{anthropicToolUseId}}", "name": "get_current_weather", "input": { "city": "Berlin" } }
+            ]
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "tool_result",
+                "tool_use_id": "{{anthropicToolUseId}}",
+                "content": "{\"city\":\"Berlin\",\"condition\":\"Starkregen\",\"precipitation_probability\":90,\"temperature\":12}"
+              }
+            ]
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        // Fallback-ID, falls "Messages (Tools)" nicht vorher ausgeführt wurde
+        if (!bru.getVar("anthropicToolUseId")) bru.setVar("anthropicToolUseId", "toolu_bruno_example_01");
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Finale Textantwort", function () {
+          const b = res.getBody();
+          expect(b.stop_reason).to.equal("end_turn");
+          expect(b.content.find(c => c.type === "text").text).to.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Messages (Tool Result)
+
+  Tool-Ergebnisse gehen als `tool_result`-Block in einer **User**-Nachricht zurück, verknüpft über `tool_use_id`.

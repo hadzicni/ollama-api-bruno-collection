@@ -1,0 +1,45 @@
+info:
+  name: Embeddings (Legacy)
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/embeddings"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{embedModel}}",
+        "prompt": "Dies ist der veraltete Embeddings-Endpunkt."
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Einzelner Vektor im Feld 'embedding'", function () {
+          expect(res.getBody().embedding).to.be.an("array").and.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Embeddings (Legacy) ⚠️
+
+  `POST /api/embeddings` – **veraltet**, durch `/api/embed` ersetzt.
+
+  Unterschiede:
+  - Feld `prompt` statt `input` (nur ein String)
+  - Antwort `embedding` (ein Vektor) statt `embeddings` (Array)
+  - Vektoren sind **nicht** normalisiert

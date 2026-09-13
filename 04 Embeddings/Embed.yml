@@ -1,0 +1,59 @@
+info:
+  name: Embed
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/embed"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{embedModel}}",
+        "input": "Lamas sind Mitglieder der Kamelfamilie."
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Ein Embedding-Vektor", function () {
+          const e = res.getBody().embeddings;
+          expect(e).to.have.lengthOf(1);
+          expect(e[0]).to.be.an("array").and.not.be.empty;
+          console.log("📐 Dimensionen:", e[0].length);
+        });
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.embeddings
+      operator: isArray
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Embed
+
+  ## Response
+
+  ```json
+  {
+    "model": "embeddinggemma",
+    "embeddings": [[0.010071029, -0.0017594862, 0.05007221, …]],
+    "total_duration": 14143917,
+    "load_duration": 1019500,
+    "prompt_eval_count": 8
+  }
+  ```

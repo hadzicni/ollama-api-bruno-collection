@@ -1,0 +1,83 @@
+info:
+  name: Messages (Tools)
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/messages"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{toolModel}}",
+        "max_tokens": 1024,
+        "tools": [
+          {
+            "name": "get_current_weather",
+            "description": "Liefert das aktuelle Wetter für eine Stadt",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string",
+                  "description": "Name der Stadt, z. B. Berlin"
+                },
+                "unit": {
+                  "type": "string",
+                  "enum": [
+                    "celsius",
+                    "fahrenheit"
+                  ],
+                  "description": "Temperatureinheit"
+                }
+              },
+              "required": [
+                "city"
+              ]
+            }
+          }
+        ],
+        "messages": [
+          {
+            "role": "user",
+            "content": "Brauche ich heute in Berlin einen Regenschirm?"
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("tool_use Block", function () {
+          const b = res.getBody();
+          expect(b.stop_reason).to.equal("tool_use");
+          const block = b.content.find(c => c.type === "tool_use");
+          expect(block).to.have.property("id");
+          expect(block.input).to.be.an("object");
+          bru.setVar("anthropicToolUseId", block.id);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Messages (Tools)
+
+  Tools im Anthropic-Format mit `input_schema`. Die Antwort enthält einen `tool_use`-Block:
+
+  ```json
+  { "type": "tool_use", "id": "toolu_…", "name": "get_current_weather", "input": { "city": "Berlin" } }
+  ```
+
+  Die `id` wird in `anthropicToolUseId` gespeichert → weiter mit **Messages (Tool Result)**.

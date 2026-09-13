@@ -1,0 +1,30 @@
+info:
+  name: 🅰️ Anthropic Compatibility
+  type: folder
+  seq: 7
+
+request:
+  headers:
+    - name: x-api-key
+      value: "{{apiKey}}"
+    - name: anthropic-version
+      value: 2023-06-01
+  auth: inherit
+
+docs:
+  content: |-
+    # 🅰️ Anthropic Compatibility
+
+    Ollama unterstützt die **Anthropic Messages API** unter `/v1/messages` – damit laufen z. B. Claude Code
+    oder das Anthropic SDK gegen lokale Modelle:
+
+    ```bash
+    export ANTHROPIC_BASE_URL=http://localhost:11434
+    export ANTHROPIC_AUTH_TOKEN=ollama
+    ```
+
+    Die Header `x-api-key` und `anthropic-version` sind auf Ordnerebene gesetzt.
+
+    ✅ Messages, Streaming, System-Prompts, Multi-Turn, Vision (Base64), Tools, Tool-Results, Thinking
+    ❌ `tool_choice`, Token-Counting, Prompt-Caching, Batches, URL-Bilder
+  type: text/markdown

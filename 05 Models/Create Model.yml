@@ -1,0 +1,74 @@
+info:
+  name: Create Model (from existing)
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/create"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{customModelName}}",
+        "from": "{{model}}",
+        "system": "Du bist \"Bruno\", ein freundlicher API-Testing-Assistent. Du antwortest immer auf Deutsch, knapp und mit einem Hauch Humor.",
+        "parameters": {
+          "temperature": 0.4,
+          "num_ctx": 8192,
+          "stop": [
+            "<|eot_id|>"
+          ]
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Wer bist du?"
+          },
+          {
+            "role": "assistant",
+            "content": "Ich bin Bruno 🐶 – dein Assistent für alles rund um APIs!"
+          }
+        ],
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Create erfolgreich", function () {
+          expect(res.getBody().status).to.equal("success");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Create Model (from existing)
+
+  `POST /api/create` – Erstellt ein neues Modell auf Basis eines bestehenden – das API-Äquivalent zu einem Modelfile.
+
+  | Feld | Modelfile | Beschreibung |
+  |---|---|---|
+  | `model` | – | Name des neuen Modells |
+  | `from` | `FROM` | Basismodell |
+  | `system` | `SYSTEM` | System-Prompt |
+  | `template` | `TEMPLATE` | Prompt-Template (Go-Template-Syntax) |
+  | `parameters` | `PARAMETER` | Standard-Optionen |
+  | `messages` | `MESSAGE` | Beispiel-Konversation (Few-Shot) |
+  | `license` | `LICENSE` | Lizenztext(e) |
+  | `adapters` | `ADAPTER` | LoRA-Adapter (Dateiname → Digest) |
+  | `files` | `FROM ./x.gguf` | GGUF/Safetensors-Dateien (Dateiname → Digest, siehe *Blobs*) |
+  | `quantize` | `--quantize` | z. B. `q4_K_M`, `q8_0` |
+
+  Danach testen: *Chat* mit `model = {{customModelName}}`.

@@ -1,0 +1,31 @@
+info:
+  name: ✍️ Generate
+  type: folder
+  seq: 2
+
+request:
+  auth: inherit
+
+docs:
+  content: |2-
+        # ✍️ Generate – `POST /api/generate`
+
+        Erzeugt eine Antwort auf einen einzelnen Prompt (ohne Chat-Verlauf).
+      
+    ## Wichtige Parameter
+
+    | Feld | Typ | Beschreibung |
+    |---|---|---|
+    | `model` | string | **Pflicht.** Modellname |
+    | `prompt` | string | Eingabetext |
+    | `suffix` | string | Text *nach* der Einfügestelle (Fill-in-the-Middle) |
+    | `images` | string[] | Base64-kodierte Bilder |
+    | `format` | "json" \| object | JSON-Modus oder JSON-Schema |
+    | `system` | string | System-Prompt (überschreibt Modelfile) |
+    | `stream` | bool | Standard `true` |
+    | `think` | bool \| "low" \| "medium" \| "high" | Thinking aktivieren |
+    | `raw` | bool | Kein Prompt-Template anwenden |
+    | `keep_alive` | string \| number | z. B. `"5m"`, `0` = sofort entladen, `-1` = dauerhaft |
+    | `logprobs` / `top_logprobs` | bool / int | Token-Wahrscheinlichkeiten |
+    | `options` | object | `temperature`, `top_k`, `top_p`, `min_p`, `seed`, `stop`, `num_ctx`, `num_predict` … |
+  type: text/markdown

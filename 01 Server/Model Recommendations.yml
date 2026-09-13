@@ -1,0 +1,35 @@
+info:
+  name: Model Recommendations (experimental)
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/experimental/model-recommendations"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const recs = res.getBody()?.recommendations;
+        if (Array.isArray(recs)) console.log("💡 Empfohlene Modelle:", recs.map(r => r.model || r.name || r).join(", "));
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Model Recommendations ⚗️
+
+  `GET /api/experimental/model-recommendations` – Liefert eine Liste empfohlener Modelle.
+
+  > ⚠️ **Experimentell** – Pfad und Format können sich ohne Ankündigung ändern.

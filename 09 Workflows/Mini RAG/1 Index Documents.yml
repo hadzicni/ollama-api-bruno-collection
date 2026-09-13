@@ -1,0 +1,50 @@
+info:
+  name: 1 · Dokumente indexieren
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/embed"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{embedModel}}",
+        "input": [
+          "Die Firma Lamatech wurde 2019 in Graz gegründet und beschäftigt 48 Mitarbeitende.",
+          "Der Support von Lamatech ist montags bis freitags von 8 bis 17 Uhr unter support@lamatech.example erreichbar.",
+          "Das Produkt \"HerdBox\" ist ein On-Premise-Server für LLMs mit 2 GPUs und kostet 12.900 Euro.",
+          "Mitarbeitende von Lamatech haben 30 Urlaubstage pro Jahr und dürfen bis zu 3 Tage pro Woche remote arbeiten.",
+          "Die HerdBox wird mit vorinstalliertem Ollama ausgeliefert und hat 3 Jahre Garantie.",
+          "Lamatech plant 2026 eine Niederlassung in Zürich."
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const docs = req.getBody().input;
+        const embeddings = res.getBody()?.embeddings;
+        if (embeddings) {
+          bru.setVar("ragIndex", JSON.stringify(docs.map((text, i) => ({ text, embedding: embeddings[i] }))));
+          console.log("🗂️ " + docs.length + " Dokumente indexiert (" + embeddings[0].length + " Dimensionen)");
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Ein Embedding pro Dokument", function () {
+          expect(res.getBody().embeddings).to.have.lengthOf(req.getBody().input.length);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

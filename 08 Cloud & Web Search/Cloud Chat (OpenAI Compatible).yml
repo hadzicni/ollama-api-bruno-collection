@@ -1,0 +1,40 @@
+info:
+  name: Cloud Chat (OpenAI Compatible)
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{cloudUrl}}/v1/chat/completions"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{cloudModel}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Gib mir drei Tipps für gutes Prompt-Engineering."
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort erhalten", function () {
+          expect(res.getBody().choices[0].message.content).to.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

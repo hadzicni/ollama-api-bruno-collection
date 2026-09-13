@@ -1,0 +1,78 @@
+info:
+  name: Chat (Structured Output)
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Erzähle mir etwas über Kanada. Antworte als JSON."
+          }
+        ],
+        "stream": false,
+        "format": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "capital": {
+              "type": "string"
+            },
+            "population": {
+              "type": "integer"
+            },
+            "languages": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "name",
+            "capital",
+            "languages"
+          ]
+        },
+        "options": {
+          "temperature": 0
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: try { console.log("📋 Strukturierte Antwort:", JSON.parse(res.getBody().message.content)); } catch (e) {}
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort entspricht dem Schema", function () {
+          const data = JSON.parse(res.getBody().message.content);
+          expect(data).to.include.keys("name", "capital", "languages");
+          expect(data.languages).to.be.an("array");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat (Structured Output)
+
+  JSON-Schema in `format` erzwingt eine exakte Antwortstruktur – ideal für Datenextraktion.

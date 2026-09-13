@@ -1,0 +1,47 @@
+info:
+  name: Chat with System Prompt
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Du bist ein erfahrener Senior-Softwareentwickler. Antworte präzise, mit Codebeispielen in TypeScript."
+          },
+          {
+            "role": "user",
+            "content": "Wie debounce ich eine Funktion?"
+          }
+        ],
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Assistant-Nachricht vorhanden", function () {
+          const msg = res.getBody().message;
+          expect(msg.role).to.equal("assistant");
+          expect(msg.content).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

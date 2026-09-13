@@ -1,0 +1,80 @@
+info:
+  name: List Local Models
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/tags"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const models = res.getBody()?.models || [];
+        const gb = b => (b / 1024 ** 3).toFixed(2) + " GB";
+        console.log("📦 " + models.length + " Modell(e) installiert:");
+        models
+          .sort((a, b) => b.size - a.size)
+          .forEach(m => console.log("  • " + m.name.padEnd(40) + gb(m.size).padStart(10) + "  " + (m.details?.parameter_size || "") + " " + (m.details?.quantization_level || "")));
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Liste der Modelle", function () {
+          expect(res.getBody().models).to.be.an("array");
+        });
+
+        test("Standard-Modell ist installiert", function () {
+          const wanted = bru.interpolate("{{model}}");
+          const names = res.getBody().models.map(m => m.name);
+          const found = names.some(n => n === wanted || n === wanted + ":latest");
+          if (!found) console.warn("⚠️ " + wanted + " fehlt – 'Pull Model' ausführen!");
+          expect(found).to.equal(true);
+        });
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.models
+      operator: isArray
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # List Local Models
+
+  `GET /api/tags` – Alle lokal installierten Modelle.
+
+  ## Response
+
+  ```json
+  {
+    "models": [
+      {
+        "name": "llama3.2:latest",
+        "model": "llama3.2:latest",
+        "modified_at": "2025-10-03T23:34:03.409490317-07:00",
+        "size": 2019393189,
+        "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+        "details": {
+          "format": "gguf",
+          "family": "llama",
+          "families": ["llama"],
+          "parameter_size": "3.2B",
+          "quantization_level": "Q4_K_M"
+        }
+      }
+    ]
+  }
+  ```
+
+  Das After-Response-Script gibt eine sortierte Übersicht in der Konsole aus.

@@ -1,0 +1,50 @@
+info:
+  name: Responses (Streaming)
+  type: http
+  seq: 12
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/responses"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "input": "Nenne fünf Programmiersprachen mit je einem Satz Beschreibung.",
+        "stream": true
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Stream liefert Server-Sent Events", function () {
+          expect(res.getHeader("content-type")).to.contain("text/event-stream");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Responses (Streaming)
+
+  Semantische SSE-Events:
+
+  ```
+  event: response.created
+  event: response.output_item.added
+  event: response.output_text.delta
+  …
+  event: response.output_text.done
+  event: response.completed
+  ```

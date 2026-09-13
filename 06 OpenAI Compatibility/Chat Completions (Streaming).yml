@@ -1,0 +1,57 @@
+info:
+  name: Chat Completions (Streaming)
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/chat/completions"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Zähle von 1 bis 10 auf Spanisch."
+          }
+        ],
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Stream liefert Server-Sent Events", function () {
+          expect(res.getHeader("content-type")).to.contain("text/event-stream");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat Completions (Streaming)
+
+  Server-Sent Events im OpenAI-Format:
+
+  ```
+  data: {"id":"chatcmpl-1","object":"chat.completion.chunk","choices":[{"index":0,"delta":{"role":"assistant","content":"uno"}}]}
+
+  data: {"id":"chatcmpl-1","object":"chat.completion.chunk","choices":[],"usage":{"prompt_tokens":14,"completion_tokens":20,"total_tokens":34}}
+
+  data: [DONE]
+  ```

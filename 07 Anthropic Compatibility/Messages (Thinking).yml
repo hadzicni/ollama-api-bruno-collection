@@ -1,0 +1,59 @@
+info:
+  name: Messages (Extended Thinking)
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/messages"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{thinkingModel}}",
+        "max_tokens": 4096,
+        "thinking": {
+          "type": "enabled",
+          "budget_tokens": 2048
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Drei Freunde teilen sich eine Rechnung von 75 €. Einer zahlt doppelt so viel wie jeder der anderen beiden. Wie viel zahlt jeder?"
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        (res.getBody()?.content || []).forEach(function (c) {
+          if (c.type === "thinking") console.log("🧠 " + c.thinking);
+          if (c.type === "text") console.log("💬 " + c.text);
+        });
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("thinking- und text-Block", function () {
+          const types = res.getBody().content.map(c => c.type);
+          expect(types).to.include("thinking");
+          expect(types).to.include("text");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Messages (Extended Thinking)
+
+  `thinking: {"type": "enabled", "budget_tokens": N}` aktiviert das Denken.
+  Die Antwort enthält einen `thinking`-Block vor dem `text`-Block.

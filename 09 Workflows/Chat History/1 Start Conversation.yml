@@ -1,0 +1,58 @@
+info:
+  name: 1 · Unterhaltung starten
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [],
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const history = [
+          { role: "system", content: "Du bist ein geduldiger Lehrer für Astronomie. Antworte kurz (max. 4 Sätze)." },
+          { role: "user", content: "Warum hat der Mars eine rote Farbe?" }
+        ];
+        bru.setVar("chatHistory", JSON.stringify(history));
+
+        const body = req.getBody();
+        body.messages = history;
+        req.setBody(body);
+    - type: after-response
+      code: |-
+        const msg = res.getBody()?.message;
+        if (msg) {
+          const history = JSON.parse(bru.getVar("chatHistory"));
+          history.push({ role: "assistant", content: msg.content });
+          bru.setVar("chatHistory", JSON.stringify(history));
+          console.log("🤖 " + msg.content);
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Assistant-Nachricht vorhanden", function () {
+          const msg = res.getBody().message;
+          expect(msg.role).to.equal("assistant");
+          expect(msg.content).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,0 +1,55 @@
+info:
+  name: Responses
+  type: http
+  seq: 11
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/responses"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "instructions": "Antworte wie ein Wetterbericht im Radio.",
+        "input": "Beschreibe einen typischen Herbsttag in Hamburg.",
+        "max_output_tokens": 300,
+        "temperature": 0.7
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const out = res.getBody()?.output || [];
+        const text = out.filter(o => o.type === "message").flatMap(o => o.content || []).filter(c => c.type === "output_text").map(c => c.text).join("");
+        if (text) console.log("📻 " + text);
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Responses-Objekt", function () {
+          const b = res.getBody();
+          expect(b.object).to.equal("response");
+          expect(b.output).to.be.an("array").and.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Responses
+
+  OpenAI **Responses API** (ab Ollama v0.13.3).
+
+  Unterstützt: `input` (String oder Items), `instructions`, `tools`, `reasoning`, `stream`,
+  `temperature`, `top_p`, `max_output_tokens`, `text.format`.
+
+  ⚠️ **Zustandslos** – `previous_response_id` und `conversation` werden nicht unterstützt.

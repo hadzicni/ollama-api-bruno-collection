@@ -1,0 +1,79 @@
+info:
+  name: Chat Completions (JSON Schema)
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/chat/completions"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Extrahiere die Daten: \"Max Mustermann, 34, wohnt in Hamburg und arbeitet als Tischler.\""
+          }
+        ],
+        "response_format": {
+          "type": "json_schema",
+          "json_schema": {
+            "name": "person",
+            "strict": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "age": {
+                  "type": "integer"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "job": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "age",
+                "city",
+                "job"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "temperature": 0
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort entspricht dem Schema", function () {
+          const data = JSON.parse(res.getBody().choices[0].message.content);
+          expect(data).to.have.all.keys("name", "age", "city", "job");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat Completions (JSON Schema)
+
+  `response_format` mit `type: "json_schema"` → Structured Outputs.
+  Für einfachen JSON-Modus: `{"type": "json_object"}`.

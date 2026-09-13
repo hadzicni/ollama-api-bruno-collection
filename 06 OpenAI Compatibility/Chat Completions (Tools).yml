@@ -1,0 +1,79 @@
+info:
+  name: Chat Completions (Tools)
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/chat/completions"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{toolModel}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Wie ist das Wetter in München?"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_current_weather",
+              "description": "Liefert das aktuelle Wetter für eine Stadt",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string",
+                    "description": "Name der Stadt, z. B. Berlin"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "enum": [
+                      "celsius",
+                      "fahrenheit"
+                    ],
+                    "description": "Temperatureinheit"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Tool-Call im OpenAI-Format", function () {
+          const choice = res.getBody().choices[0];
+          expect(choice.finish_reason).to.equal("tool_calls");
+          const call = choice.message.tool_calls[0];
+          expect(call.type).to.equal("function");
+          expect(call.function.arguments).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat Completions (Tools)
+
+  Im OpenAI-Format sind `function.arguments` ein **JSON-String** (nicht Objekt wie in `/api/chat`),
+  und jeder Tool-Call hat eine `id`. Tool-Ergebnisse werden mit `role: "tool"` und `tool_call_id` zurückgegeben.

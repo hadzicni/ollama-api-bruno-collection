@@ -1,0 +1,52 @@
+info:
+  name: Cloud Model via Local Server
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{localCloudModel}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hallo aus Bruno! Auf welcher Hardware läufst du ungefähr?"
+          }
+        ],
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Assistant-Nachricht vorhanden", function () {
+          const msg = res.getBody().message;
+          expect(msg.role).to.equal("assistant");
+          expect(msg.content).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Cloud Model via Local Server
+
+  Cloud-Modelle mit Suffix `-cloud` werden vom **lokalen** Server transparent an ollama.com weitergeleitet.
+
+  Voraussetzung: `ollama signin` (siehe *Server → Who Am I*). Einmalig: `ollama pull {{localCloudModel}}`.
+
+  ℹ️ Der Ordner sendet zwar `Bearer {{ollamaCloudApiKey}}`, der lokale Server nutzt aber die Anmeldung aus `ollama signin`.

@@ -1,0 +1,72 @@
+info:
+  name: Generate with Options
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "prompt": "Nenne drei kreative Namen für ein Café.",
+        "stream": false,
+        "options": {
+          "temperature": 0.9,
+          "top_k": 40,
+          "top_p": 0.9,
+          "min_p": 0.05,
+          "repeat_penalty": 1.1,
+          "repeat_last_n": 64,
+          "num_ctx": 4096,
+          "num_predict": 200,
+          "seed": 42,
+          "stop": [
+            "\n\n\n"
+          ]
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort enthält Text", function () {
+          expect(res.getBody().response).to.be.a("string").and.not.be.empty;
+        });
+
+        test("num_predict wird eingehalten", function () {
+          expect(res.getBody().eval_count).to.be.at.most(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Generate with Options
+
+  Laufzeit-Optionen überschreiben die Modelfile-Parameter.
+
+  | Option | Beschreibung |
+  |---|---|
+  | `temperature` | Kreativität (0 = deterministisch, >1 = sehr zufällig) |
+  | `top_k` | Nur die K wahrscheinlichsten Tokens berücksichtigen |
+  | `top_p` | Nucleus Sampling (kumulative Wahrscheinlichkeit) |
+  | `min_p` | Mindestwahrscheinlichkeit relativ zum besten Token |
+  | `repeat_penalty` / `repeat_last_n` | Wiederholungen bestrafen |
+  | `num_ctx` | Kontextfenster in Tokens |
+  | `num_predict` | Max. Anzahl generierter Tokens (`-1` = unbegrenzt) |
+  | `seed` | Seed für reproduzierbare Ausgaben |
+  | `stop` | Stop-Sequenzen |
+  | `num_gpu`, `num_thread`, `num_batch` | Hardware-Tuning |

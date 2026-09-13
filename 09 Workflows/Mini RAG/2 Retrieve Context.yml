@@ -1,0 +1,58 @@
+info:
+  name: 2 · Kontext abrufen
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/embed"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{embedModel}}",
+        "input": "{{ragQuestion}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        if (!bru.getVar("ragQuestion")) {
+          bru.setVar("ragQuestion", "Wie lange gilt die Garantie auf die HerdBox und was ist vorinstalliert?");
+        }
+        if (!bru.getVar("ragIndex")) throw new Error("Bitte zuerst '1 · Dokumente indexieren' ausführen.");
+    - type: after-response
+      code: |-
+        const q = res.getBody()?.embeddings?.[0];
+        if (q) {
+          const index = JSON.parse(bru.getVar("ragIndex"));
+          const dot = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0);
+          const ranked = index
+            .map(d => ({ text: d.text, score: dot(q, d.embedding) }))
+            .sort((a, b) => b.score - a.score);
+
+          console.log("🔍 Frage: " + bru.getVar("ragQuestion"));
+          ranked.forEach(d => console.log("   " + d.score.toFixed(3) + "  " + d.text));
+
+          const top = ranked.slice(0, 2);
+          bru.setVar("ragContext", top.map(d => "- " + d.text).join("\n"));
+          bru.setVar("ragTopScore", top[0].score);
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Relevanter Kontext gefunden", function () {
+          expect(bru.getVar("ragContext")).to.contain("HerdBox");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,0 +1,51 @@
+info:
+  name: Chat Completions (Reasoning)
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/chat/completions"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{reasoningModel}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Ist 1.001 eine Primzahl? Begründe kurz."
+          }
+        ],
+        "reasoning_effort": "medium"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const m = res.getBody()?.choices?.[0]?.message;
+        if (m?.reasoning) console.log("🧠 Reasoning:\n" + m.reasoning);
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort erhalten", function () {
+          expect(res.getBody().choices[0].message.content).to.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat Completions (Reasoning)
+
+  `reasoning_effort`: `"low"`, `"medium"`, `"high"` (oder `"none"` zum Abschalten).
+  Der Denkprozess wird im Feld `message.reasoning` zurückgegeben.

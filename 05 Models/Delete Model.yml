@@ -1,0 +1,40 @@
+info:
+  name: Delete Model
+  type: http
+  seq: 11
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/api/delete"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{copyModelName}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Delete Model
+
+  `DELETE /api/delete` – Entfernt ein Modell und nicht mehr referenzierte Layer.
+
+  Standardmäßig wird `{{copyModelName}}` gelöscht (aus *Copy Model*). Zum Aufräumen auch
+  `{{customModelName}}` und `{{customModelName}}-raw` eintragen.
+
+  Antwort: `200 OK` bzw. `404`, wenn das Modell nicht existiert.

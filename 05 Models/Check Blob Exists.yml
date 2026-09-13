@@ -1,0 +1,40 @@
+info:
+  name: Check Blob Exists
+  type: http
+  seq: 13
+
+http:
+  method: HEAD
+  url: "{{baseUrl}}/api/blobs/:digest"
+  params:
+    - name: digest
+      value: "{{blobDigest}}"
+      type: path
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Blob-Status geprüft", function () {
+          const s = res.getStatus();
+          expect([200, 404]).to.include(s);
+          console.log(s === 200 ? "✅ Blob existiert" : "❌ Blob nicht vorhanden");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Check Blob Exists
+
+  `HEAD /api/blobs/:digest` – Prüft, ob eine Datei (GGUF, Safetensors, Adapter) bereits auf dem Server liegt.
+
+  - `200 OK` → vorhanden
+  - `404 Not Found` → hochladen mit *Push Blob*
+
+  Digest berechnen: `shasum -a 256 model.gguf` → `sha256:<hash>`

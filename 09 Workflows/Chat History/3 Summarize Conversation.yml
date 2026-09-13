@@ -1,0 +1,77 @@
+info:
+  name: 3 · Unterhaltung zusammenfassen
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [],
+        "stream": false,
+        "format": {
+          "type": "object",
+          "properties": {
+            "topic": {
+              "type": "string"
+            },
+            "key_facts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "topic",
+            "key_facts"
+          ]
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const history = JSON.parse(bru.getVar("chatHistory") || "[]");
+        const transcript = history
+          .filter(m => m.role !== "system")
+          .map(m => (m.role === "user" ? "Schüler" : "Lehrer") + ": " + m.content)
+          .join("\n\n");
+
+        const body = req.getBody();
+        body.messages = [
+          { role: "system", content: "Fasse Gespräche strukturiert zusammen." },
+          { role: "user", content: "Fasse dieses Gespräch zusammen:\n\n" + transcript }
+        ];
+        req.setBody(body);
+    - type: after-response
+      code: |-
+        try {
+          const summary = JSON.parse(res.getBody().message.content);
+          console.log("📝 Thema: " + summary.topic);
+          summary.key_facts.forEach(f => console.log("   • " + f));
+        } catch (e) {}
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Strukturierte Zusammenfassung", function () {
+          const s = JSON.parse(res.getBody().message.content);
+          expect(s.topic).to.be.a("string");
+          expect(s.key_facts).to.be.an("array").and.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

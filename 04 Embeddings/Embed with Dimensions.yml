@@ -1,0 +1,46 @@
+info:
+  name: Embed (Dimensions & Truncate)
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/embed"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{embedModel}}",
+        "input": "Kompakte Vektoren sparen Speicherplatz in der Vektordatenbank.",
+        "dimensions": 256,
+        "truncate": true,
+        "keep_alive": "{{keepAlive}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Vektor hat 256 Dimensionen", function () {
+          expect(res.getBody().embeddings[0]).to.have.lengthOf(256);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Embed (Dimensions & Truncate)
+
+  `dimensions` kürzt den Vektor auf die gewünschte Länge – nur sinnvoll bei Modellen mit
+  *Matryoshka Representation Learning* (z. B. `embeddinggemma`: 768 → 512/256/128).
+
+  `truncate: false` liefert einen Fehler, wenn die Eingabe das Kontextfenster überschreitet.

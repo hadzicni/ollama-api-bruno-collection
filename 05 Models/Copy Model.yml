@@ -1,0 +1,39 @@
+info:
+  name: Copy Model
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/copy"
+  body:
+    type: json
+    data: |-
+      {
+        "source": "{{model}}",
+        "destination": "{{copyModelName}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Copy Model
+
+  `POST /api/copy` – Legt eine Kopie unter neuem Namen an. Layer werden **nicht** dupliziert
+  (nur ein neues Manifest), die Kopie kostet also praktisch keinen Speicher.
+
+  Antwort: `200 OK` ohne Body, bzw. `404`, wenn das Quellmodell nicht existiert.

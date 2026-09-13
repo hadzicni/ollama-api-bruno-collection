@@ -1,0 +1,83 @@
+info:
+  name: Generate (Structured Output)
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "prompt": "Ollama ist 22 Jahre alt und beschäftigt. Alonso ist 23 und hat Zeit. Gib die Personen strukturiert zurück.",
+        "stream": false,
+        "format": {
+          "type": "object",
+          "properties": {
+            "people": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "age": {
+                    "type": "integer"
+                  },
+                  "available": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "age",
+                  "available"
+                ]
+              }
+            }
+          },
+          "required": [
+            "people"
+          ]
+        },
+        "options": {
+          "temperature": 0
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort entspricht dem Schema", function () {
+          const data = JSON.parse(res.getBody().response);
+          expect(data.people).to.be.an("array").with.lengthOf(2);
+          data.people.forEach(function (p) {
+            expect(p).to.have.all.keys("name", "age", "available");
+            expect(p.age).to.be.a("number");
+          });
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Generate (Structured Output)
+
+  `format` akzeptiert ein **JSON-Schema**. Die Ausgabe wird per Grammar-Sampling auf das Schema beschränkt.
+
+  Tipps:
+  - `temperature: 0` für stabilere Ergebnisse
+  - Das Schema zusätzlich im Prompt beschreiben verbessert die Qualität

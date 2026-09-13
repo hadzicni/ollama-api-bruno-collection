@@ -1,0 +1,61 @@
+info:
+  name: Generate (Logprobs)
+  type: http
+  seq: 12
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "prompt": "Vervollständige: Der Himmel ist",
+        "stream": false,
+        "logprobs": true,
+        "top_logprobs": 3,
+        "options": {
+          "num_predict": 5,
+          "temperature": 0
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const lp = res.getBody()?.logprobs;
+        if (Array.isArray(lp)) {
+          lp.forEach(function (t) {
+            const alts = (t.top_logprobs || []).map(a => JSON.stringify(a.token) + " " + (Math.exp(a.logprob) * 100).toFixed(1) + "%").join(", ");
+            console.log(JSON.stringify(t.token), (Math.exp(t.logprob) * 100).toFixed(1) + "%", "| Alternativen:", alts);
+          });
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Logprobs enthalten", function () {
+          const lp = res.getBody().logprobs;
+          expect(lp).to.be.an("array").and.not.be.empty;
+          expect(lp[0]).to.have.property("token");
+          expect(lp[0]).to.have.property("logprob");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Generate (Logprobs)
+
+  `logprobs: true` liefert zu jedem Token die Log-Wahrscheinlichkeit, `top_logprobs` die N besten Alternativen.
+
+  Das After-Response-Script rechnet sie in Prozent um und schreibt sie in die Konsole.

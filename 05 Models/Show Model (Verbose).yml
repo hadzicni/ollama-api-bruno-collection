@@ -1,0 +1,38 @@
+info:
+  name: Show Model Details (Verbose)
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/show"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "verbose": true
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Show Model Details (Verbose)
+
+  `verbose: true` liefert zusätzlich große Felder in `model_info` (z. B. die komplette Tokenizer-Vokabelliste).
+
+  ⚠️ Die Antwort kann **mehrere MB** groß sein.

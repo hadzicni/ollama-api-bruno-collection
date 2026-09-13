@@ -1,0 +1,37 @@
+info:
+  name: Who Am I (Account)
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/me"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Angemeldet oder Signin-URL", function () {
+          expect([200, 401]).to.include(res.getStatus());
+          if (res.getStatus() === 401) {
+            console.log("🔑 Nicht angemeldet – Signin:", res.getBody().signin_url);
+          }
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Who Am I
+
+  `POST /api/me` – Zeigt den mit dem lokalen Server verknüpften **ollama.com-Account**.
+
+  - `200` → Account-Infos (Name, E-Mail, Plan …)
+  - `401` → nicht angemeldet; die Antwort enthält eine `signin_url`
+
+  Anmelden per CLI: `ollama signin`

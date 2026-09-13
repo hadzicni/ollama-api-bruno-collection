@@ -1,0 +1,58 @@
+info:
+  name: Chat (Keep Model Loaded)
+  type: http
+  seq: 11
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Sag kurz Hallo."
+          }
+        ],
+        "keep_alive": -1,
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Assistant-Nachricht vorhanden", function () {
+          const msg = res.getBody().message;
+          expect(msg.role).to.equal("assistant");
+          expect(msg.content).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat (Keep Model Loaded)
+
+  `keep_alive: -1` hält das Modell **unbegrenzt** im Speicher (bis Neustart oder Unload).
+
+  | Wert | Bedeutung |
+  |---|---|
+  | `"5m"` | Standard: 5 Minuten |
+  | `"1h"`, `3600` | Dauer als String oder Sekunden |
+  | `-1` | Für immer |
+  | `0` | Sofort entladen |
+
+  Global setzbar über die Umgebungsvariable `OLLAMA_KEEP_ALIVE`.

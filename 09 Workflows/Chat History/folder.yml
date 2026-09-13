@@ -1,0 +1,19 @@
+info:
+  name: 💭 Chat-Verlauf
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    # 💭 Chat-Verlauf
+
+    Zeigt, wie eine Konversation über mehrere Requests hinweg geführt wird. Der Verlauf liegt in der
+    Laufzeitvariable `chatHistory` und wächst mit jedem Request.
+
+    1. **Start** – setzt System-Prompt + erste Frage, speichert die Antwort
+    2. **Follow-up** – hängt eine Rückfrage an den bisherigen Verlauf
+    3. **Summary** – lässt das Modell die gesamte Unterhaltung zusammenfassen
+  type: text/markdown

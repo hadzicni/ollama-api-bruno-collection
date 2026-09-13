@@ -1,0 +1,15 @@
+info:
+  name: 🔁 Workflows
+  type: folder
+  seq: 9
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    # 🔁 Workflows
+
+    Verkettete Abläufe – am besten mit dem **Collection Runner** (Rechtsklick auf einen Unterordner → *Run*) ausführen.
+    Die Requests teilen Daten über Laufzeitvariablen.
+  type: text/markdown

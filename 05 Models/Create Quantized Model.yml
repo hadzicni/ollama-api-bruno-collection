@@ -1,0 +1,50 @@
+info:
+  name: Create Model (Quantize)
+  type: http
+  seq: 10
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/create"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{customModelName}}:q4_K_M",
+        "from": "llama3.2:3b-instruct-fp16",
+        "quantize": "q4_K_M",
+        "stream": true
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Create Model (Quantize)
+
+  Quantisiert ein **FP16/FP32**-Modell. Bereits quantisierte Modelle können nicht erneut quantisiert werden.
+
+  Beispiel-Stream:
+
+  ```
+  {"status":"quantizing F16 model to Q4_K_M","digest":"0","total":6433687776,"completed":12302}
+  …
+  {"status":"success"}
+  ```
+
+  Unterstützte Stufen u. a.: `q4_K_M`, `q4_K_S`, `q8_0`.
+
+  ⚠️ Setzt voraus, dass `llama3.2:3b-instruct-fp16` (~6,4 GB) lokal vorhanden ist.

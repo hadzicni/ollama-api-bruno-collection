@@ -1,0 +1,49 @@
+info:
+  name: Pull Model
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/pull"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Pull erfolgreich", function () {
+          expect(res.getBody().status).to.equal("success");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Pull Model
+
+  `POST /api/pull` – Lädt ein Modell aus der [Ollama Library](https://ollama.com/library) herunter
+  bzw. aktualisiert es. Bereits vorhandene Layer werden übersprungen.
+
+  | Feld | Beschreibung |
+  |---|---|
+  | `model` | Modellname, optional mit Tag (`qwen3:8b`) oder Namespace (`user/model`) |
+  | `insecure` | Unsichere Registry-Verbindung erlauben |
+  | `stream` | `false` → eine Antwort am Ende: `{"status": "success"}` |
+
+  💡 Auch Hugging-Face-GGUFs: `hf.co/bartowski/Llama-3.2-1B-Instruct-GGUF:Q4_K_M`

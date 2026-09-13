@@ -1,0 +1,53 @@
+info:
+  name: Generate (Thinking)
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{thinkingModel}}",
+        "prompt": "Wie viele \"r\" sind im Wort \"Erdbeerrrkuchen\"?",
+        "think": true,
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const b = res.getBody();
+        if (b?.thinking) console.log("🧠 Thinking:\n" + b.thinking);
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort enthält Text", function () {
+          expect(res.getBody().response).to.be.a("string").and.not.be.empty;
+        });
+
+        test("Thinking-Ausgabe getrennt geliefert", function () {
+          expect(res.getBody().thinking).to.be.a("string").and.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Generate (Thinking)
+
+  Mit `think: true` liefern Thinking-Modelle (z. B. qwen3, deepseek-r1) ihre Gedankengänge
+  getrennt im Feld `thinking`, die finale Antwort in `response`.
+
+  `think: false` deaktiviert das Denken bei Modellen, die das unterstützen.

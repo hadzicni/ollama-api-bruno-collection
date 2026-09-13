@@ -1,0 +1,27 @@
+info:
+  name: 💬 Chat
+  type: folder
+  seq: 3
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    # 💬 Chat – `POST /api/chat`
+
+    Erzeugt die nächste Nachricht in einer Konversation. Der Verlauf wird im Array `messages` mitgeschickt.
+
+    ## Message-Objekt
+
+    | Feld | Beschreibung |
+    |---|---|
+    | `role` | `system`, `user`, `assistant` oder `tool` |
+    | `content` | Textinhalt |
+    | `images` | Base64-Bilder (optional) |
+    | `thinking` | Thinking-Text einer vorherigen Assistant-Antwort (optional) |
+    | `tool_calls` | Vom Modell angeforderte Tool-Aufrufe |
+    | `tool_name` | Name des Tools bei `role: "tool"` |
+
+    Weitere Felder wie bei Generate: `tools`, `format`, `options`, `stream`, `think`, `keep_alive`, `logprobs`, `top_logprobs`.
+  type: text/markdown

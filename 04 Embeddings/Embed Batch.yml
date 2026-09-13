@@ -1,0 +1,53 @@
+info:
+  name: Embed (Batch)
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/embed"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{embedModel}}",
+        "input": [
+          "Der Hund spielt im Garten.",
+          "Ein Welpe tobt draußen auf der Wiese.",
+          "Die Börse schloss heute mit Verlusten."
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Drei Embeddings", function () {
+          expect(res.getBody().embeddings).to.have.lengthOf(3);
+        });
+
+        test("Ähnliche Sätze liegen näher beieinander", function () {
+          const [a, b, c] = res.getBody().embeddings;
+          const dot = (x, y) => x.reduce((s, v, i) => s + v * y[i], 0);
+          const simAB = dot(a, b), simAC = dot(a, c);
+          console.log("🐶 Hund ↔ Welpe:", simAB.toFixed(3), "| 🐶 Hund ↔ Börse:", simAC.toFixed(3));
+          expect(simAB).to.be.above(simAC);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Embed (Batch)
+
+  Mehrere Texte in einem Request. Der Test berechnet die **Cosine Similarity** und prüft,
+  dass semantisch ähnliche Sätze (Hund/Welpe) näher beieinander liegen als unähnliche (Hund/Börse).

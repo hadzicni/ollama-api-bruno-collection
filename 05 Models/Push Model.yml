@@ -1,0 +1,42 @@
+info:
+  name: Push Model
+  type: http
+  seq: 12
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/push"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{ollamaUsername}}/{{customModelName}}",
+        "insecure": false,
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Push Model
+
+  `POST /api/push` – Lädt ein Modell in die Ollama-Registry hoch.
+
+  Voraussetzungen:
+  1. Account auf [ollama.com](https://ollama.com) und `ollama signin` bzw. Public Key unter *Settings → Keys* hinterlegt
+  2. Modell im Namespace `<username>/<model>` – ggf. vorher per *Copy Model* umbenennen:
+     `{"source": "{{customModelName}}", "destination": "{{ollamaUsername}}/{{customModelName}}"}`

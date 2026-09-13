@@ -1,0 +1,48 @@
+info:
+  name: Messages (System & Parameters)
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/messages"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "max_tokens": 512,
+        "system": "Du bist ein Sommelier. Antworte elegant und in maximal 3 Sätzen.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Welcher Wein passt zu Käsespätzle?"
+          }
+        ],
+        "temperature": 0.8,
+        "top_p": 0.9,
+        "top_k": 40,
+        "stop_sequences": [
+          "\n\n\n"
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Textantwort", function () {
+          expect(res.getBody().content[0].text).to.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

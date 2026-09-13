@@ -1,0 +1,66 @@
+info:
+  name: Chat Completions
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/chat/completions"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Du bist ein hilfreicher Assistent."
+          },
+          {
+            "role": "user",
+            "content": "Was sind die Vorteile von lokalen LLMs?"
+          }
+        ],
+        "temperature": 0.7,
+        "max_tokens": 300,
+        "top_p": 0.9,
+        "seed": 42
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort im OpenAI-Format", function () {
+          const b = res.getBody();
+          expect(b.choices[0].message.role).to.equal("assistant");
+          expect(b.usage).to.have.property("total_tokens");
+        });
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.object
+      operator: eq
+      value: chat.completion
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat Completions
+
+  Unterstützte Felder: `model`, `messages`, `frequency_penalty`, `presence_penalty`, `response_format`,
+  `seed`, `stop`, `stream`, `stream_options.include_usage`, `temperature`, `top_p`, `max_tokens`,
+  `tools`, `reasoning_effort`, `logprobs`, `top_logprobs`.
+
+  Nicht unterstützt: `tool_choice`, `logit_bias`, `user`, `n`.

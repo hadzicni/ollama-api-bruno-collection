@@ -1,0 +1,42 @@
+info:
+  name: List Models
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/v1/models"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("OpenAI-Listenformat", function () {
+          const b = res.getBody();
+          expect(b.object).to.equal("list");
+          expect(b.data).to.be.an("array");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # List Models
+
+  ```json
+  {
+    "object": "list",
+    "data": [
+      { "id": "llama3.2:latest", "object": "model", "created": 1728000000, "owned_by": "library" }
+    ]
+  }
+  ```

@@ -1,0 +1,59 @@
+info:
+  name: Push Blob (Upload File)
+  type: http
+  seq: 14
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/blobs/:digest"
+  headers:
+    - name: Content-Type
+      value: application/octet-stream
+  params:
+    - name: digest
+      value: "{{blobDigest}}"
+      type: path
+  body:
+    type: file
+    data:
+      - filePath: ""
+        contentType: application/octet-stream
+        selected: true
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Blob hochgeladen", function () {
+          expect(res.getStatus()).to.equal(201);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Push Blob (Upload File)
+
+  `POST /api/blobs/:digest` – Lädt eine Datei hoch, um sie anschließend in `/api/create` zu referenzieren.
+
+  ## Ablauf: eigenes GGUF importieren
+
+  1. Digest berechnen: `shasum -a 256 my-model.gguf`
+  2. `blobDigest` = `sha256:<hash>` setzen
+  3. Im Tab **Body** die Datei auswählen und senden → `201 Created`
+  4. Modell erzeugen:
+
+  ```json
+  POST /api/create
+  {
+    "model": "my-gguf-model",
+    "files": { "my-model.gguf": "sha256:<hash>" }
+  }
+  ```
+
+  `400 Bad Request` → Digest passt nicht zum Dateiinhalt.

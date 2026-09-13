@@ -1,0 +1,92 @@
+info:
+  name: Generate
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "prompt": "Warum ist der Himmel blau? Antworte in zwei Sätzen.",
+        "stream": false,
+        "keep_alive": "{{keepAlive}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Generierung abgeschlossen", function () {
+          expect(res.getBody().done).to.equal(true);
+        });
+
+        test("Antwort enthält Text", function () {
+          expect(res.getBody().response).to.be.a("string").and.not.be.empty;
+        });
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.done
+      operator: eq
+      value: "true"
+    - expression: res.body.response
+      operator: isNotEmpty
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |2-
+        # Generate
+
+        Einfachste Form: ein Prompt, eine vollständige Antwort (`stream: false`).
+
+        ## Response (gekürzt)
+
+        ```json
+        {
+          "model": "llama3.2",
+          "created_at": "2025-10-17T23:14:07.414671Z",
+          "response": "Der Himmel ist blau, weil …",
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 174560334,
+          "load_duration": 101397084,
+          "prompt_eval_count": 11,
+          "prompt_eval_duration": 13074791,
+          "eval_count": 18,
+          "eval_duration": 52479709
+        }
+        ```
+
+        Alle `*_duration`-Werte sind in **Nanosekunden**. Tokens/s = `eval_count / eval_duration * 1e9`.
+      
+  ## Wichtige Parameter
+
+  | Feld | Typ | Beschreibung |
+  |---|---|---|
+  | `model` | string | **Pflicht.** Modellname |
+  | `prompt` | string | Eingabetext |
+  | `suffix` | string | Text *nach* der Einfügestelle (Fill-in-the-Middle) |
+  | `images` | string[] | Base64-kodierte Bilder |
+  | `format` | "json" \| object | JSON-Modus oder JSON-Schema |
+  | `system` | string | System-Prompt (überschreibt Modelfile) |
+  | `stream` | bool | Standard `true` |
+  | `think` | bool \| "low" \| "medium" \| "high" | Thinking aktivieren |
+  | `raw` | bool | Kein Prompt-Template anwenden |
+  | `keep_alive` | string \| number | z. B. `"5m"`, `0` = sofort entladen, `-1` = dauerhaft |
+  | `logprobs` / `top_logprobs` | bool / int | Token-Wahrscheinlichkeiten |
+  | `options` | object | `temperature`, `top_k`, `top_p`, `min_p`, `seed`, `stop`, `num_ctx`, `num_predict` … |

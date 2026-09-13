@@ -1,0 +1,166 @@
+info:
+  name: Chat (Tool Result)
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{toolModel}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Wie ist das Wetter gerade in Zürich und wie spät ist es dort?"
+          },
+          {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "function": {
+                  "name": "get_current_weather",
+                  "arguments": {
+                    "city": "Zürich"
+                  }
+                }
+              },
+              {
+                "function": {
+                  "name": "get_current_time",
+                  "arguments": {
+                    "timezone": "Europe/Zurich"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "tool_name": "get_current_weather",
+            "content": "{\"city\":\"Zürich\",\"temperature\":18,\"unit\":\"celsius\",\"condition\":\"leicht bewölkt\"}"
+          },
+          {
+            "role": "tool",
+            "tool_name": "get_current_time",
+            "content": "{\"timezone\":\"Europe/Zurich\",\"time\":\"14:32\"}"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_current_weather",
+              "description": "Liefert das aktuelle Wetter für eine Stadt",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string",
+                    "description": "Name der Stadt, z. B. Berlin"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "enum": [
+                      "celsius",
+                      "fahrenheit"
+                    ],
+                    "description": "Temperatureinheit"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "get_current_time",
+              "description": "Liefert die aktuelle Uhrzeit in einer Zeitzone",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "timezone": {
+                    "type": "string",
+                    "description": "IANA-Zeitzone, z. B. Europe/Berlin"
+                  }
+                },
+                "required": [
+                  "timezone"
+                ]
+              }
+            }
+          }
+        ],
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        // Wenn "Chat (Tool Calling)" vorher lief, echte Tool-Calls übernehmen
+        // und simulierte Tool-Ergebnisse dafür erzeugen.
+        const stored = bru.getVar("toolCallMessage");
+        if (stored) {
+          const assistant = JSON.parse(stored);
+          const body = req.getBody();
+
+          const fakeTools = {
+            get_current_weather: function (args) {
+              return { city: args.city, temperature: 18, unit: args.unit || "celsius", condition: "leicht bewölkt" };
+            },
+            get_current_time: function (args) {
+              const tz = args.timezone || "Europe/Zurich";
+              return { timezone: tz, time: new Date().toLocaleTimeString("de-CH", { timeZone: tz, hour: "2-digit", minute: "2-digit" }) };
+            }
+          };
+
+          const toolMessages = (assistant.tool_calls || []).map(function (call) {
+            const fn = fakeTools[call.function.name];
+            const result = fn ? fn(call.function.arguments || {}) : { error: "Unbekanntes Tool" };
+            return { role: "tool", tool_name: call.function.name, content: JSON.stringify(result) };
+          });
+
+          body.messages = [body.messages[0], assistant].concat(toolMessages);
+          req.setBody(body);
+          console.log("🔁 " + toolMessages.length + " Tool-Ergebnis(se) aus vorherigem Tool-Call übernommen");
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Assistant-Nachricht vorhanden", function () {
+          const msg = res.getBody().message;
+          expect(msg.role).to.equal("assistant");
+          expect(msg.content).to.be.a("string");
+        });
+
+        test("Finale Antwort ohne weitere Tool-Calls", function () {
+          expect(res.getBody().message.content).to.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat (Tool Result)
+
+  Zweiter Schritt des Tool-Loops: Die Tool-Ergebnisse werden als `role: "tool"` mit `tool_name` zurückgeschickt.
+  Das Modell formuliert daraus die finale Antwort.
+
+  - Läuft *ohne Vorbedingung* mit den Beispieldaten im Body.
+  - Wurde vorher **Chat (Tool Calling)** ausgeführt, übernimmt das Pre-Request-Script die echten Tool-Calls
+    und simuliert passende Ergebnisse.

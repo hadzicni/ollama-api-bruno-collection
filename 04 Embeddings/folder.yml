@@ -1,0 +1,24 @@
+info:
+  name: 🧮 Embeddings
+  type: folder
+  seq: 4
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    # 🧮 Embeddings
+
+    Vektor-Repräsentationen von Text für semantische Suche, Clustering und RAG.
+
+    | Feld | Beschreibung |
+    |---|---|
+    | `model` | Embedding-Modell (z. B. `embeddinggemma`, `nomic-embed-text`, `mxbai-embed-large`, `qwen3-embedding`) |
+    | `input` | String oder String-Array |
+    | `truncate` | Zu lange Eingaben kürzen (Standard `true`); bei `false` → Fehler |
+    | `dimensions` | Anzahl der Dimensionen (für Modelle mit Matryoshka-Support) |
+    | `keep_alive`, `options` | wie bei Generate |
+
+    Die Vektoren sind **L2-normalisiert** – Cosine Similarity = Skalarprodukt.
+  type: text/markdown

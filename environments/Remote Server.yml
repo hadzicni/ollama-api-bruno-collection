@@ -1,0 +1,62 @@
+name: Remote Server
+color: "#3b82f6"
+variables:
+  - name: baseUrl
+    value: http://192.168.1.100:11434
+    description: Server mit OLLAMA_HOST=0.0.0.0 starten
+  - name: apiKey
+    value: ollama
+    description: Bei Reverse-Proxy mit Auth hier das Token eintragen
+  - secret: true
+    name: ollamaCloudApiKey
+    description: API-Key von https://ollama.com/settings/keys (Web Search & Cloud)
+  - name: model
+    value: llama3.2
+    description: Standard-Modell für Chat & Generate
+  - name: thinkingModel
+    value: qwen3
+    description: "Modell mit Thinking-Support (think: true)"
+  - name: reasoningModel
+    value: gpt-oss:20b
+    description: "Modell mit Reasoning-Level (think: low/medium/high)"
+  - name: toolModel
+    value: qwen3
+    description: Modell mit Tool-Calling-Support
+  - name: visionModel
+    value: gemma3
+    description: Multimodales Modell (Bilder)
+  - name: embedModel
+    value: embeddinggemma
+    description: Embedding-Modell
+  - name: codeModel
+    value: qwen2.5-coder
+    description: Code-Modell mit Fill-in-the-Middle
+  - name: smallModel
+    value: smollm2:135m
+    description: Winziges Modell (~270 MB) für den Modell-Lebenszyklus-Workflow
+  - name: customModelName
+    value: bruno-assistant
+    description: Name für via /api/create erzeugte Modelle
+  - name: copyModelName
+    value: bruno-copy
+    description: Zielname für /api/copy (wird in "Delete Model" wieder gelöscht)
+  - name: keepAlive
+    value: 5m
+    description: Wie lange ein Modell nach dem Request im Speicher bleibt
+  - name: imageUrl
+    value: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/330px-Cat03.jpg
+    description: Bild für Vision-Requests (wird automatisch Base64-kodiert)
+  - name: cloudUrl
+    value: https://ollama.com
+  - name: cloudModel
+    value: gpt-oss:120b
+    description: Modell für direkte Cloud-Requests
+  - name: localCloudModel
+    value: gpt-oss:120b-cloud
+    description: Cloud-Modell über den lokalen Server (nach "ollama signin")
+  - name: ollamaUsername
+    value: your-username
+    description: ollama.com Benutzername (für Push)
+  - name: blobDigest
+    value: sha256:29fdb92e57cf0827ded04ae6461b5931d01fa595843f55d36f5b275a52087dd2
+    description: SHA256-Digest für Blob-Requests

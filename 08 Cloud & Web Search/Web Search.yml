@@ -1,0 +1,61 @@
+info:
+  name: Web Search
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{cloudUrl}}/api/web_search"
+  body:
+    type: json
+    data: |-
+      {
+        "query": "Was ist neu in Ollama?",
+        "max_results": 5
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: (res.getBody()?.results || []).forEach((r, i) => console.log((i + 1) + ". " + r.title + "\n   " + r.url));
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Suchergebnisse", function () {
+          const r = res.getBody().results;
+          expect(r).to.be.an("array").and.not.be.empty;
+          expect(r[0]).to.include.keys("title", "url", "content");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Web Search
+
+  `POST https://ollama.com/api/web_search`
+
+  | Feld | Beschreibung |
+  |---|---|
+  | `query` | **Pflicht.** Suchanfrage |
+  | `max_results` | Anzahl Ergebnisse (Standard 5, max. 10) |
+
+  ## Response
+
+  ```json
+  {
+    "results": [
+      { "title": "Ollama", "url": "https://ollama.com/", "content": "Cloud models are now available…" }
+    ]
+  }
+  ```
+
+  💡 Kombiniert mit Tool-Calling lassen sich Such-Agenten bauen (Tools `web_search` / `web_fetch`).

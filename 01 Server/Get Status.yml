@@ -1,0 +1,46 @@
+info:
+  name: Get Status
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/status"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Cloud-Status enthalten", function () {
+          expect(res.getBody()).to.have.property("cloud");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Get Status
+
+  `GET /api/status` – Server-Status, u. a. ob Cloud-Funktionen deaktiviert sind.
+
+  ## Response
+
+  ```json
+  {
+    "cloud": {
+      "disabled": false,
+      "source": ""
+    }
+  }
+  ```
+
+  Cloud-Features lassen sich z. B. über `OLLAMA_NO_CLOUD=1` abschalten – `source` zeigt dann, woher die Einstellung stammt.

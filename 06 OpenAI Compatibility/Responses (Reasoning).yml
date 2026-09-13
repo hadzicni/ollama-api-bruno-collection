@@ -1,0 +1,46 @@
+info:
+  name: Responses (Reasoning)
+  type: http
+  seq: 14
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/responses"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{reasoningModel}}",
+        "input": "Welche Zahl kommt als Nächstes: 2, 6, 12, 20, 30, ?",
+        "reasoning": {
+          "effort": "high",
+          "summary": "auto"
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Reasoning-Item vorhanden", function () {
+          const types = res.getBody().output.map(o => o.type);
+          expect(types).to.include("reasoning");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Responses (Reasoning)
+
+  `reasoning.effort`: `low` | `medium` | `high`, `reasoning.summary`: `auto` | `concise` | `detailed`.
+  Das Denken erscheint als Output-Item `type: "reasoning"`.

@@ -1,0 +1,40 @@
+info:
+  name: 4 · Generate
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "bruno-lifecycle-test",
+        "prompt": "PING",
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Generierung abgeschlossen", function () {
+          expect(res.getBody().done).to.equal(true);
+        });
+
+        test("Antwort enthält Text", function () {
+          expect(res.getBody().response).to.be.a("string").and.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

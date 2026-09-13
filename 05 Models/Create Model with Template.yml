@@ -1,0 +1,50 @@
+info:
+  name: Create Model (Custom Template)
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/create"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{customModelName}}-raw",
+        "from": "{{model}}",
+        "template": "{{- if .System }}### System:\n{{ .System }}\n\n{{ end }}### User:\n{{ .Prompt }}\n\n### Assistant:\n",
+        "system": "Antworte ausschließlich in Stichpunkten.",
+        "parameters": {
+          "stop": [
+            "### User:",
+            "### System:"
+          ]
+        },
+        "license": "MIT",
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Create Model (Custom Template)
+
+  Überschreibt das Prompt-Template mit einer eigenen **Go-Template**-Definition.
+
+  Verfügbare Variablen: `.System`, `.Prompt`, `.Response`, `.Messages`, `.Tools`, `.Suffix`.
+
+  ⚠️ Ein falsches Template verschlechtert die Antwortqualität deutlich – nur für Experimente oder eigene Modelle.

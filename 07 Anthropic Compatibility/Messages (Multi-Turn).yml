@@ -1,0 +1,49 @@
+info:
+  name: Messages (Multi-Turn)
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/messages"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "max_tokens": 512,
+        "messages": [
+          {
+            "role": "user",
+            "content": "Mein Lieblingsobst ist die Mango."
+          },
+          {
+            "role": "assistant",
+            "content": "Eine tolle Wahl! Mangos sind süß und reich an Vitamin C."
+          },
+          {
+            "role": "user",
+            "content": "Welches Rezept empfiehlst du mir mit meinem Lieblingsobst?"
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Kontext wurde berücksichtigt", function () {
+          expect(res.getBody().content[0].text.toLowerCase()).to.contain("mango");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

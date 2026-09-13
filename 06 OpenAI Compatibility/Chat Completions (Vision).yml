@@ -1,0 +1,67 @@
+info:
+  name: Chat Completions (Vision)
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/chat/completions"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{visionModel}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              { "type": "text", "text": "Was siehst du auf diesem Bild?" },
+              { "type": "image_url", "image_url": { "url": "data:image/jpeg;base64,{{imageBase64}}" } }
+            ]
+          }
+        ],
+        "max_tokens": 300
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        // Lädt das Beispielbild ({{imageUrl}}) einmalig herunter und legt es Base64-kodiert
+        // in der Laufzeitvariable "imageBase64" ab. Eigenes Bild? Einfach imageUrl ändern
+        // und die Variable "imageBase64" zurücksetzen (Runtime Variables → löschen).
+        const cachedFor = bru.getVar("imageBase64Source");
+        const imageUrl = bru.interpolate("{{imageUrl}}");
+
+        if (!bru.getVar("imageBase64") || cachedFor !== imageUrl) {
+          const axios = require("axios");
+          const response = await axios.get(imageUrl, {
+            responseType: "arraybuffer",
+            headers: { "User-Agent": "Bruno-Ollama-Collection/1.0" }
+          });
+          bru.setVar("imageBase64", Buffer.from(response.data).toString("base64"));
+          bru.setVar("imageBase64Source", imageUrl);
+          console.log("🖼️ Bild geladen:", imageUrl);
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Beschreibung erhalten", function () {
+          expect(res.getBody().choices[0].message.content).to.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat Completions (Vision)
+
+  Bilder als `image_url` Content-Part mit **Base64-Data-URL**. Externe HTTP-URLs werden nicht unterstützt.

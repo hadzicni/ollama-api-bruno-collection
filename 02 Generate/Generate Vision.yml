@@ -1,0 +1,65 @@
+info:
+  name: Generate (Vision)
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{visionModel}}",
+        "prompt": "Beschreibe dieses Bild in 2-3 Sätzen auf Deutsch.",
+        "images": ["{{imageBase64}}"],
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        // Lädt das Beispielbild ({{imageUrl}}) einmalig herunter und legt es Base64-kodiert
+        // in der Laufzeitvariable "imageBase64" ab. Eigenes Bild? Einfach imageUrl ändern
+        // und die Variable "imageBase64" zurücksetzen (Runtime Variables → löschen).
+        const cachedFor = bru.getVar("imageBase64Source");
+        const imageUrl = bru.interpolate("{{imageUrl}}");
+
+        if (!bru.getVar("imageBase64") || cachedFor !== imageUrl) {
+          const axios = require("axios");
+          const response = await axios.get(imageUrl, {
+            responseType: "arraybuffer",
+            headers: { "User-Agent": "Bruno-Ollama-Collection/1.0" }
+          });
+          bru.setVar("imageBase64", Buffer.from(response.data).toString("base64"));
+          bru.setVar("imageBase64Source", imageUrl);
+          console.log("🖼️ Bild geladen:", imageUrl);
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort enthält Text", function () {
+          expect(res.getBody().response).to.be.a("string").and.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Generate (Vision)
+
+  `images` enthält **Base64-kodierte** Bilder (ohne `data:`-Präfix).
+
+  Das Pre-Request-Script lädt automatisch `{{imageUrl}}` herunter und kodiert es.
+  Eigenes Bild: Variable `imageUrl` in der Umgebung ändern.
+
+  Geeignete Modelle: `gemma3`, `qwen2.5vl`, `llama3.2-vision`, `llava`, `qwen3-vl` …

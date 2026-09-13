@@ -1,0 +1,70 @@
+info:
+  name: Messages (Vision)
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/messages"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{visionModel}}",
+        "max_tokens": 512,
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "image",
+                "source": { "type": "base64", "media_type": "image/jpeg", "data": "{{imageBase64}}" }
+              },
+              { "type": "text", "text": "Beschreibe dieses Bild in einem Satz." }
+            ]
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        // Lädt das Beispielbild ({{imageUrl}}) einmalig herunter und legt es Base64-kodiert
+        // in der Laufzeitvariable "imageBase64" ab. Eigenes Bild? Einfach imageUrl ändern
+        // und die Variable "imageBase64" zurücksetzen (Runtime Variables → löschen).
+        const cachedFor = bru.getVar("imageBase64Source");
+        const imageUrl = bru.interpolate("{{imageUrl}}");
+
+        if (!bru.getVar("imageBase64") || cachedFor !== imageUrl) {
+          const axios = require("axios");
+          const response = await axios.get(imageUrl, {
+            responseType: "arraybuffer",
+            headers: { "User-Agent": "Bruno-Ollama-Collection/1.0" }
+          });
+          bru.setVar("imageBase64", Buffer.from(response.data).toString("base64"));
+          bru.setVar("imageBase64Source", imageUrl);
+          console.log("🖼️ Bild geladen:", imageUrl);
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Bildbeschreibung", function () {
+          expect(res.getBody().content[0].text).to.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Messages (Vision)
+
+  Bilder als `image`-Block mit `source.type: "base64"`. URL-Quellen werden nicht unterstützt.

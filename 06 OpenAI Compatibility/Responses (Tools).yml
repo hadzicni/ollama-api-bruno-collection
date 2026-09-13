@@ -1,0 +1,76 @@
+info:
+  name: Responses (Tools)
+  type: http
+  seq: 13
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/responses"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{toolModel}}",
+        "input": [
+          {
+            "role": "user",
+            "content": "Wie warm ist es gerade in Wien?"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "name": "get_current_weather",
+            "description": "Liefert das aktuelle Wetter für eine Stadt",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string",
+                  "description": "Name der Stadt, z. B. Berlin"
+                },
+                "unit": {
+                  "type": "string",
+                  "enum": [
+                    "celsius",
+                    "fahrenheit"
+                  ],
+                  "description": "Temperatureinheit"
+                }
+              },
+              "required": [
+                "city"
+              ]
+            }
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("function_call im Output", function () {
+          const calls = res.getBody().output.filter(o => o.type === "function_call");
+          expect(calls).to.not.be.empty;
+          console.log("🔧", calls[0].name, calls[0].arguments);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Responses (Tools)
+
+  In der Responses API sind Tools **flach** definiert (`name`, `parameters` direkt am Tool, ohne `function`-Wrapper).
+  Aufrufe erscheinen als Output-Items vom Typ `function_call`; Ergebnisse werden als
+  `{"type": "function_call_output", "call_id": "…", "output": "…"}` im nächsten `input` mitgeschickt.

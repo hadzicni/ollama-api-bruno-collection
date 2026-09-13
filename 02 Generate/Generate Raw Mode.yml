@@ -1,0 +1,49 @@
+info:
+  name: Generate (Raw Mode)
+  type: http
+  seq: 11
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "prompt": "<|start_header_id|>user<|end_header_id|>\n\nNenne die Hauptstadt von Österreich.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+        "raw": true,
+        "stream": false,
+        "options": {
+          "num_predict": 50
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort enthält Text", function () {
+          expect(res.getBody().response).to.be.a("string").and.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Generate (Raw Mode)
+
+  Mit `raw: true` wird **kein Prompt-Template** angewendet – du lieferst den kompletten, formatierten Prompt selbst.
+  Nützlich für eigene Templates oder Base-Modelle.
+
+  ⚠️ Das Beispiel nutzt das **Llama-3-Chat-Format**. Für andere Modelle das Template anpassen
+  (siehe *Models → Show Model* → `template`).

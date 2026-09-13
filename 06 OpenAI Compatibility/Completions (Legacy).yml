@@ -1,0 +1,48 @@
+info:
+  name: Completions (Legacy)
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/completions"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "prompt": "Es war einmal ein kleines Lama, das",
+        "max_tokens": 100,
+        "temperature": 0.8,
+        "stop": [
+          "\n\n"
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Text-Completion", function () {
+          const b = res.getBody();
+          expect(b.object).to.equal("text_completion");
+          expect(b.choices[0].text).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Completions (Legacy)
+
+  Klassischer Text-Completion-Endpunkt. Unterstützt u. a. `prompt`, `max_tokens`, `temperature`, `top_p`,
+  `stop`, `seed`, `suffix`, `stream`, `frequency_penalty`, `presence_penalty`.

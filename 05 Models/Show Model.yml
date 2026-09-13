@@ -1,0 +1,73 @@
+info:
+  name: Show Model Details
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/show"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const b = res.getBody();
+        if (b?.details) {
+          const info = b.model_info || {};
+          const arch = info["general.architecture"];
+          console.log("🔎 " + bru.interpolate("{{model}}"));
+          console.log("   Familie:      " + b.details.family + " (" + b.details.parameter_size + ", " + b.details.quantization_level + ")");
+          console.log("   Fähigkeiten:  " + (b.capabilities || []).join(", "));
+          if (arch) console.log("   Max. Kontext: " + info[arch + ".context_length"]);
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Details enthalten", function () {
+          const b = res.getBody();
+          expect(b).to.have.property("details");
+          expect(b).to.have.property("capabilities");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Show Model Details
+
+  `POST /api/show` – Modelfile, Template, Parameter, Lizenz, Architektur-Infos und **capabilities**.
+
+  ## Response (gekürzt)
+
+  ```json
+  {
+    "parameters": "temperature 0.7\nnum_ctx 2048",
+    "license": "…",
+    "modified_at": "2025-10-03T14:05:21.123456789+02:00",
+    "template": "{{- if .System }}…",
+    "details": { "format": "gguf", "family": "llama", "parameter_size": "3.2B", "quantization_level": "Q4_K_M" },
+    "model_info": {
+      "general.architecture": "llama",
+      "general.parameter_count": 3212749888,
+      "llama.context_length": 131072,
+      "llama.embedding_length": 3072
+    },
+    "capabilities": ["completion", "tools"]
+  }
+  ```
+
+  Mögliche `capabilities`: `completion`, `tools`, `insert`, `vision`, `embedding`, `thinking`.

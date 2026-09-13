@@ -1,0 +1,50 @@
+info:
+  name: Generate (Streaming)
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "prompt": "Schreibe ein kurzes Haiku über Lamas.",
+        "stream": true
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Stream liefert NDJSON", function () {
+          expect(res.getHeader("content-type")).to.contain("application/x-ndjson");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Generate (Streaming)
+
+  Mit `stream: true` (Standard) liefert Ollama **NDJSON** – ein JSON-Objekt pro Zeile:
+
+  ```
+  {"model":"llama3.2","created_at":"…","response":"Weiche","done":false}
+  {"model":"llama3.2","created_at":"…","response":" Wolle","done":false}
+  …
+  {"model":"llama3.2","created_at":"…","response":"","done":true,"done_reason":"stop","total_duration":…}
+  ```
+
+  Das letzte Objekt (`done: true`) enthält die Statistiken.

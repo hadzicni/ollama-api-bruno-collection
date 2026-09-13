@@ -1,0 +1,46 @@
+info:
+  name: Generate (JSON Mode)
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "prompt": "Welche Farbe hat der Himmel zu verschiedenen Tageszeiten? Antworte als JSON mit den Schlüsseln morning, noon, evening.",
+        "format": "json",
+        "stream": false
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Antwort ist gültiges JSON", function () {
+          const parsed = JSON.parse(res.getBody().response);
+          expect(parsed).to.be.an("object");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Generate (JSON Mode)
+
+  `format: "json"` erzwingt syntaktisch gültiges JSON.
+
+  > 💡 Das Modell sollte im Prompt trotzdem angewiesen werden, JSON zu liefern – sonst entstehen oft nur Whitespaces.
+  > Für eine **feste Struktur** besser *Structured Outputs* mit JSON-Schema nutzen.

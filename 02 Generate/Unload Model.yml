@@ -1,0 +1,42 @@
+info:
+  name: Unload Model from Memory
+  type: http
+  seq: 14
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/generate"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "keep_alive": 0
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Modell entladen", function () {
+          expect(res.getBody().done_reason).to.equal("unload");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Unload Model from Memory
+
+  `keep_alive: 0` ohne Prompt entlädt das Modell sofort und gibt RAM/VRAM frei (`done_reason: "unload"`).
+
+  CLI-Äquivalent: `ollama stop <model>`

@@ -1,0 +1,59 @@
+info:
+  name: Chat (Logprobs)
+  type: http
+  seq: 10
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Antworte nur mit Ja oder Nein: Ist Wasser nass?"
+          }
+        ],
+        "logprobs": true,
+        "top_logprobs": 5,
+        "stream": false,
+        "options": {
+          "temperature": 0,
+          "num_predict": 3
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const first = res.getBody()?.logprobs?.[0];
+        if (first) {
+          console.log("🎲 Erstes Token:", JSON.stringify(first.token));
+          (first.top_logprobs || []).forEach(a => console.log("   ", JSON.stringify(a.token), (Math.exp(a.logprob) * 100).toFixed(2) + "%"));
+        }
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Logprobs enthalten", function () {
+          expect(res.getBody().logprobs).to.be.an("array").and.not.be.empty;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat (Logprobs)
+
+  Zeigt, wie sicher sich das Modell bei jedem Token ist – nützlich für Klassifikation und Confidence-Scores.

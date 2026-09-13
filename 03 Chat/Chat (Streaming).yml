@@ -1,0 +1,46 @@
+info:
+  name: Chat (Streaming)
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/chat"
+  body:
+    type: json
+    data: |-
+      {
+        "model": "{{model}}",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Erzähle eine sehr kurze Gute-Nacht-Geschichte."
+          }
+        ],
+        "stream": true
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Status 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Stream liefert NDJSON", function () {
+          expect(res.getHeader("content-type")).to.contain("application/x-ndjson");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Chat (Streaming)
+
+  NDJSON-Stream; jede Zeile enthält ein `message.content`-Fragment. Die letzte Zeile hat `done: true` und die Statistiken.
