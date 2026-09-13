@@ -30,3 +30,7 @@ ollama pull llama3.2 && ollama pull qwen3 && ollama pull gemma3 && ollama pull e
 For web search and cloud requests, create an API key at <https://ollama.com/settings/keys> and add it to the environment as the secret `ollamaCloudApiKey`. Secrets are not stored in the collection files.
 
 See the collection documentation inside Bruno for more details.
+
+## License
+
+[MIT](LICENSE)
