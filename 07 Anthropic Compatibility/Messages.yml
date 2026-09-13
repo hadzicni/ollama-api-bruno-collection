@@ -15,7 +15,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Hallo! Erkläre kurz, was du bist."
+            "content": "Hi! Briefly explain what you are."
           }
         ]
       }
@@ -29,7 +29,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Anthropic Message-Format", function () {
+        test("Anthropic message format", function () {
           const b = res.getBody();
           expect(b.content).to.be.an("array");
           expect(b.content[0].type).to.equal("text");
@@ -60,11 +60,11 @@ docs: |-
 
   ```json
   {
-    "id": "msg_…",
+    "id": "msg_...",
     "type": "message",
     "role": "assistant",
     "model": "llama3.2",
-    "content": [{ "type": "text", "text": "Hallo! Ich bin …" }],
+    "content": [{ "type": "text", "text": "Hi! I am ..." }],
     "stop_reason": "end_turn",
     "usage": { "input_tokens": 15, "output_tokens": 42 }
   }

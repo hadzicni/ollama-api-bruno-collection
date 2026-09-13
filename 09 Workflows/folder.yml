@@ -1,5 +1,5 @@
 info:
-  name: 🔁 Workflows
+  name: Workflows
   type: folder
   seq: 9
 
@@ -8,8 +8,8 @@ request:
 
 docs:
   content: |-
-    # 🔁 Workflows
+    # Workflows
 
-    Verkettete Abläufe – am besten mit dem **Collection Runner** (Rechtsklick auf einen Unterordner → *Run*) ausführen.
-    Die Requests teilen Daten über Laufzeitvariablen.
+    Chained flows - best run with the **Collection Runner** (right-click a subfolder > *Run*).
+    The requests share data via runtime variables.
   type: text/markdown

@@ -1,5 +1,5 @@
 info:
-  name: 6 · Unload
+  name: 6. Unload
   type: http
   seq: 6
 
@@ -23,7 +23,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Entladen", function () {
+        test("Unloaded", function () {
           expect(res.getBody().done_reason).to.equal("unload");
         });
 

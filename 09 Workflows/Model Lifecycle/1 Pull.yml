@@ -1,5 +1,5 @@
 info:
-  name: 1 · Pull
+  name: 1. Pull
   type: http
   seq: 1
 
@@ -23,7 +23,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Pull erfolgreich", function () {
+        test("Pull succeeded", function () {
           expect(res.getBody().status).to.equal("success");
         });
 

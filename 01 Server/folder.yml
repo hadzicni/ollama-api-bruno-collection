@@ -1,5 +1,5 @@
 info:
-  name: 🖥️ Server
+  name: Server
   type: folder
   seq: 1
 
@@ -8,7 +8,7 @@ request:
 
 docs:
   content: |-
-    # 🖥️ Server
+    # Server
 
-    Grundlegende Endpunkte zur Prüfung, ob der Ollama-Server läuft und welche Version installiert ist.
+    Basic endpoints to check whether the Ollama server is running and which version is installed.
   type: text/markdown

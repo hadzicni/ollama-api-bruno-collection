@@ -15,15 +15,15 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Mein Lieblingsobst ist die Mango."
+            "content": "My favorite fruit is mango."
           },
           {
             "role": "assistant",
-            "content": "Eine tolle Wahl! Mangos sind süß und reich an Vitamin C."
+            "content": "Great choice! Mangoes are sweet and rich in vitamin C."
           },
           {
             "role": "user",
-            "content": "Welches Rezept empfiehlst du mir mit meinem Lieblingsobst?"
+            "content": "Which recipe would you recommend with my favorite fruit?"
           }
         ]
       }
@@ -37,7 +37,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Kontext wurde berücksichtigt", function () {
+        test("Context was taken into account", function () {
           expect(res.getBody().content[0].text.toLowerCase()).to.contain("mango");
         });
 

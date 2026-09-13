@@ -1,5 +1,5 @@
 info:
-  name: 💬 Chat
+  name: Chat
   type: folder
   seq: 3
 
@@ -8,20 +8,20 @@ request:
 
 docs:
   content: |-
-    # 💬 Chat – `POST /api/chat`
+    # Chat - `POST /api/chat`
 
-    Erzeugt die nächste Nachricht in einer Konversation. Der Verlauf wird im Array `messages` mitgeschickt.
+    Generates the next message in a conversation. The history is sent in the `messages` array.
 
-    ## Message-Objekt
+    ## Message Object
 
-    | Feld | Beschreibung |
+    | Field | Description |
     |---|---|
-    | `role` | `system`, `user`, `assistant` oder `tool` |
-    | `content` | Textinhalt |
-    | `images` | Base64-Bilder (optional) |
-    | `thinking` | Thinking-Text einer vorherigen Assistant-Antwort (optional) |
-    | `tool_calls` | Vom Modell angeforderte Tool-Aufrufe |
-    | `tool_name` | Name des Tools bei `role: "tool"` |
+    | `role` | `system`, `user`, `assistant` or `tool` |
+    | `content` | Text content |
+    | `images` | Base64 images (optional) |
+    | `thinking` | Thinking text of a previous assistant response (optional) |
+    | `tool_calls` | Tool calls requested by the model |
+    | `tool_name` | Name of the tool for `role: "tool"` |
 
-    Weitere Felder wie bei Generate: `tools`, `format`, `options`, `stream`, `think`, `keep_alive`, `logprobs`, `top_logprobs`.
+    Other fields are the same as for generate: `tools`, `format`, `options`, `stream`, `think`, `keep_alive`, `logprobs`, `top_logprobs`.
   type: text/markdown

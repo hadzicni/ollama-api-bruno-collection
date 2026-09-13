@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{model}}",
-        "prompt": "Warum ist der Himmel blau? Antworte in zwei Sätzen.",
+        "prompt": "Why is the sky blue? Answer in two sentences.",
         "stream": false,
         "keep_alive": "{{keepAlive}}"
       }
@@ -25,11 +25,11 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Generierung abgeschlossen", function () {
+        test("Generation completed", function () {
           expect(res.getBody().done).to.equal(true);
         });
 
-        test("Antwort enthält Text", function () {
+        test("Response contains text", function () {
           expect(res.getBody().response).to.be.a("string").and.not.be.empty;
         });
   assertions:
@@ -52,15 +52,15 @@ settings:
 docs: |2-
         # Generate
 
-        Einfachste Form: ein Prompt, eine vollständige Antwort (`stream: false`).
+        The simplest form: one prompt, one complete response (`stream: false`).
 
-        ## Response (gekürzt)
+        ## Response (abridged)
 
         ```json
         {
           "model": "llama3.2",
           "created_at": "2025-10-17T23:14:07.414671Z",
-          "response": "Der Himmel ist blau, weil …",
+          "response": "The sky is blue because ...",
           "done": true,
           "done_reason": "stop",
           "total_duration": 174560334,
@@ -72,21 +72,21 @@ docs: |2-
         }
         ```
 
-        Alle `*_duration`-Werte sind in **Nanosekunden**. Tokens/s = `eval_count / eval_duration * 1e9`.
+        All `*_duration` values are in **nanoseconds**. Tokens/s = `eval_count / eval_duration * 1e9`.
       
-  ## Wichtige Parameter
+  ## Key Parameters
 
-  | Feld | Typ | Beschreibung |
+  | Field | Type | Description |
   |---|---|---|
-  | `model` | string | **Pflicht.** Modellname |
-  | `prompt` | string | Eingabetext |
-  | `suffix` | string | Text *nach* der Einfügestelle (Fill-in-the-Middle) |
-  | `images` | string[] | Base64-kodierte Bilder |
-  | `format` | "json" \| object | JSON-Modus oder JSON-Schema |
-  | `system` | string | System-Prompt (überschreibt Modelfile) |
-  | `stream` | bool | Standard `true` |
-  | `think` | bool \| "low" \| "medium" \| "high" | Thinking aktivieren |
-  | `raw` | bool | Kein Prompt-Template anwenden |
-  | `keep_alive` | string \| number | z. B. `"5m"`, `0` = sofort entladen, `-1` = dauerhaft |
-  | `logprobs` / `top_logprobs` | bool / int | Token-Wahrscheinlichkeiten |
-  | `options` | object | `temperature`, `top_k`, `top_p`, `min_p`, `seed`, `stop`, `num_ctx`, `num_predict` … |
+  | `model` | string | **Required.** Model name |
+  | `prompt` | string | Input text |
+  | `suffix` | string | Text *after* the insertion point (fill-in-the-middle) |
+  | `images` | string[] | Base64-encoded images |
+  | `format` | "json" \| object | JSON mode or JSON schema |
+  | `system` | string | System prompt (overrides the Modelfile) |
+  | `stream` | bool | Default `true` |
+  | `think` | bool \| "low" \| "medium" \| "high" | Enable thinking |
+  | `raw` | bool | Do not apply the prompt template |
+  | `keep_alive` | string \| number | e.g. `"5m"`, `0` = unload immediately, `-1` = keep forever |
+  | `logprobs` / `top_logprobs` | bool / int | Token probabilities |
+  | `options` | object | `temperature`, `top_k`, `top_p`, `min_p`, `seed`, `stop`, `num_ctx`, `num_predict`, ... |

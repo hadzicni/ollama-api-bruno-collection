@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Erkläre in drei Sätzen den Unterschied zwischen Dense- und Mixture-of-Experts-Modellen."
+            "content": "Explain the difference between dense and mixture-of-experts models in three sentences."
           }
         ],
         "stream": false
@@ -29,7 +29,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");
@@ -45,5 +45,5 @@ settings:
 docs: |-
   # Cloud Chat
 
-  Die native Chat-API direkt auf ollama.com – ideal für Modelle, die lokal zu groß sind
-  (z. B. `gpt-oss:120b`, `qwen3-coder:480b`, `deepseek-v3.1:671b`).
+  The native chat API directly on ollama.com - ideal for models too large to run locally
+  (e.g. `gpt-oss:120b`, `qwen3-coder:480b`, `deepseek-v3.1:671b`).

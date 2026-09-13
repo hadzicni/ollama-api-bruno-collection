@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{model}}",
-        "prompt": "<|start_header_id|>user<|end_header_id|>\n\nNenne die Hauptstadt von Österreich.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+        "prompt": "<|start_header_id|>user<|end_header_id|>\n\nWhat is the capital of Austria?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
         "raw": true,
         "stream": false,
         "options": {
@@ -28,7 +28,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort enthält Text", function () {
+        test("Response contains text", function () {
           expect(res.getBody().response).to.be.a("string").and.not.be.empty;
         });
 
@@ -42,8 +42,8 @@ settings:
 docs: |-
   # Generate (Raw Mode)
 
-  Mit `raw: true` wird **kein Prompt-Template** angewendet – du lieferst den kompletten, formatierten Prompt selbst.
-  Nützlich für eigene Templates oder Base-Modelle.
+  With `raw: true`, **no prompt template** is applied - you provide the fully formatted prompt yourself.
+  Useful for custom templates or base models.
 
-  ⚠️ Das Beispiel nutzt das **Llama-3-Chat-Format**. Für andere Modelle das Template anpassen
-  (siehe *Models → Show Model* → `template`).
+  Note: the example uses the **Llama 3 chat format**. Adjust the template for other models
+  (see *Models > Show Model* > `template`).

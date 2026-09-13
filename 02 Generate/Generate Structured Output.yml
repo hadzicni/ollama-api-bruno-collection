@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{model}}",
-        "prompt": "Ollama ist 22 Jahre alt und beschäftigt. Alonso ist 23 und hat Zeit. Gib die Personen strukturiert zurück.",
+        "prompt": "Ollama is 22 years old and busy. Alonso is 23 and available. Return the people in a structured format.",
         "stream": false,
         "format": {
           "type": "object",
@@ -57,7 +57,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort entspricht dem Schema", function () {
+        test("Response matches the schema", function () {
           const data = JSON.parse(res.getBody().response);
           expect(data.people).to.be.an("array").with.lengthOf(2);
           data.people.forEach(function (p) {
@@ -76,8 +76,8 @@ settings:
 docs: |-
   # Generate (Structured Output)
 
-  `format` akzeptiert ein **JSON-Schema**. Die Ausgabe wird per Grammar-Sampling auf das Schema beschränkt.
+  `format` accepts a **JSON schema**. Output is constrained to the schema via grammar-based sampling.
 
-  Tipps:
-  - `temperature: 0` für stabilere Ergebnisse
-  - Das Schema zusätzlich im Prompt beschreiben verbessert die Qualität
+  Tips:
+  - `temperature: 0` gives more stable results
+  - Describing the schema in the prompt as well improves quality

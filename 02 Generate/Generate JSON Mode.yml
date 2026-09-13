@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{model}}",
-        "prompt": "Welche Farbe hat der Himmel zu verschiedenen Tageszeiten? Antworte als JSON mit den Schlüsseln morning, noon, evening.",
+        "prompt": "What color is the sky at different times of the day? Respond as JSON with the keys morning, noon and evening.",
         "format": "json",
         "stream": false
       }
@@ -25,7 +25,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort ist gültiges JSON", function () {
+        test("Response is valid JSON", function () {
           const parsed = JSON.parse(res.getBody().response);
           expect(parsed).to.be.an("object");
         });
@@ -40,7 +40,7 @@ settings:
 docs: |-
   # Generate (JSON Mode)
 
-  `format: "json"` erzwingt syntaktisch gültiges JSON.
+  `format: "json"` enforces syntactically valid JSON.
 
-  > 💡 Das Modell sollte im Prompt trotzdem angewiesen werden, JSON zu liefern – sonst entstehen oft nur Whitespaces.
-  > Für eine **feste Struktur** besser *Structured Outputs* mit JSON-Schema nutzen.
+  > The prompt should still instruct the model to respond in JSON - otherwise it often produces only whitespace.
+  > For a **fixed structure**, use *structured outputs* with a JSON schema instead.

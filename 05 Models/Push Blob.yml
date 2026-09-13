@@ -25,7 +25,7 @@ runtime:
   scripts:
     - type: tests
       code: |-
-        test("Blob hochgeladen", function () {
+        test("Blob uploaded", function () {
           expect(res.getStatus()).to.equal(201);
         });
 
@@ -39,14 +39,14 @@ settings:
 docs: |-
   # Push Blob (Upload File)
 
-  `POST /api/blobs/:digest` – Lädt eine Datei hoch, um sie anschließend in `/api/create` zu referenzieren.
+  `POST /api/blobs/:digest` - Uploads a file so it can be referenced in `/api/create`.
 
-  ## Ablauf: eigenes GGUF importieren
+  ## Flow: import your own GGUF
 
-  1. Digest berechnen: `shasum -a 256 my-model.gguf`
-  2. `blobDigest` = `sha256:<hash>` setzen
-  3. Im Tab **Body** die Datei auswählen und senden → `201 Created`
-  4. Modell erzeugen:
+  1. Compute the digest: `shasum -a 256 my-model.gguf`
+  2. Set `blobDigest` = `sha256:<hash>`
+  3. Select the file in the **Body** tab and send -> `201 Created`
+  4. Create the model:
 
   ```json
   POST /api/create
@@ -56,4 +56,4 @@ docs: |-
   }
   ```
 
-  `400 Bad Request` → Digest passt nicht zum Dateiinhalt.
+  `400 Bad Request` -> the digest does not match the file contents.

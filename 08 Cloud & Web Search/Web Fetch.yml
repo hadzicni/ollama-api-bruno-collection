@@ -22,7 +22,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Seiteninhalt geladen", function () {
+        test("Page content fetched", function () {
           const b = res.getBody();
           expect(b.title).to.be.a("string");
           expect(b.content).to.not.be.empty;
@@ -39,12 +39,12 @@ settings:
 docs: |-
   # Web Fetch
 
-  `POST https://ollama.com/api/web_fetch` – Lädt eine Webseite und liefert Titel, Inhalt (als Text) und Links.
+  `POST https://ollama.com/api/web_fetch` - Fetches a web page and returns its title, content (as text) and links.
 
   ```json
   {
     "title": "Ollama",
-    "content": "[Cloud models](https://ollama.com/blog/cloud-models) are now available…",
+    "content": "[Cloud models](https://ollama.com/blog/cloud-models) are now available...",
     "links": ["https://ollama.com/", "https://ollama.com/models", "https://github.com/ollama/ollama"]
   }
   ```

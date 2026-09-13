@@ -1,5 +1,5 @@
 info:
-  name: 3 · Antwort mit Kontext
+  name: 3. Answer with Context
   type: http
   seq: 3
 
@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "system",
-            "content": "Beantworte die Frage ausschließlich anhand des folgenden Kontexts. Wenn die Antwort nicht im Kontext steht, sage \"Dazu habe ich keine Informationen.\"\n\nKontext:\n{{ragContext}}"
+            "content": "Answer the question using only the following context. If the answer is not in the context, say \"I don't have information about that.\"\n\nContext:\n{{ragContext}}"
           },
           {
             "role": "user",
@@ -33,21 +33,21 @@ runtime:
     - type: after-response
       code: |-
         const msg = res.getBody()?.message;
-        if (msg) console.log("💡 " + msg.content);
+        if (msg) console.log("Answer: " + msg.content);
     - type: tests
       code: |-
         test("Status 200", function () {
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");
         });
 
-        test("Antwort nennt die Garantie", function () {
-          expect(res.getBody().message.content).to.match(/3|drei/i);
+        test("Answer mentions the warranty", function () {
+          expect(res.getBody().message.content).to.match(/3|three/i);
         });
 
 settings:

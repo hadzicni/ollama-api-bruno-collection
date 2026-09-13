@@ -14,11 +14,11 @@ http:
         "messages": [
           {
             "role": "system",
-            "content": "Du bist ein hilfreicher Assistent."
+            "content": "You are a helpful assistant."
           },
           {
             "role": "user",
-            "content": "Was sind die Vorteile von lokalen LLMs?"
+            "content": "What are the benefits of running LLMs locally?"
           }
         ],
         "temperature": 0.7,
@@ -36,7 +36,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort im OpenAI-Format", function () {
+        test("Response in OpenAI format", function () {
           const b = res.getBody();
           expect(b.choices[0].message.role).to.equal("assistant");
           expect(b.usage).to.have.property("total_tokens");
@@ -59,8 +59,8 @@ settings:
 docs: |-
   # Chat Completions
 
-  Unterstützte Felder: `model`, `messages`, `frequency_penalty`, `presence_penalty`, `response_format`,
+  Supported fields: `model`, `messages`, `frequency_penalty`, `presence_penalty`, `response_format`,
   `seed`, `stop`, `stream`, `stream_options.include_usage`, `temperature`, `top_p`, `max_tokens`,
   `tools`, `reasoning_effort`, `logprobs`, `top_logprobs`.
 
-  Nicht unterstützt: `tool_choice`, `logit_bias`, `user`, `n`.
+  Not supported: `tool_choice`, `logit_bias`, `user`, `n`.

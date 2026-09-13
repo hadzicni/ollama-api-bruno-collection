@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{embedModel}}",
-        "input": "Lamas sind Mitglieder der Kamelfamilie."
+        "input": "Llamas are members of the camelid family."
       }
   auth: inherit
 
@@ -23,11 +23,11 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Ein Embedding-Vektor", function () {
+        test("One embedding vector", function () {
           const e = res.getBody().embeddings;
           expect(e).to.have.lengthOf(1);
           expect(e[0]).to.be.an("array").and.not.be.empty;
-          console.log("📐 Dimensionen:", e[0].length);
+          console.log("Dimensions:", e[0].length);
         });
   assertions:
     - expression: res.status
@@ -51,7 +51,7 @@ docs: |-
   ```json
   {
     "model": "embeddinggemma",
-    "embeddings": [[0.010071029, -0.0017594862, 0.05007221, …]],
+    "embeddings": [[0.010071029, -0.0017594862, 0.05007221, ...]],
     "total_duration": 14143917,
     "load_duration": 1019500,
     "prompt_eval_count": 8

@@ -1,5 +1,5 @@
 info:
-  name: 3 · Unterhaltung zusammenfassen
+  name: 3. Summarize Conversation
   type: http
   seq: 3
 
@@ -41,21 +41,21 @@ runtime:
         const history = JSON.parse(bru.getVar("chatHistory") || "[]");
         const transcript = history
           .filter(m => m.role !== "system")
-          .map(m => (m.role === "user" ? "Schüler" : "Lehrer") + ": " + m.content)
+          .map(m => (m.role === "user" ? "Student" : "Teacher") + ": " + m.content)
           .join("\n\n");
 
         const body = req.getBody();
         body.messages = [
-          { role: "system", content: "Fasse Gespräche strukturiert zusammen." },
-          { role: "user", content: "Fasse dieses Gespräch zusammen:\n\n" + transcript }
+          { role: "system", content: "Summarize conversations in a structured way." },
+          { role: "user", content: "Summarize this conversation:\n\n" + transcript }
         ];
         req.setBody(body);
     - type: after-response
       code: |-
         try {
           const summary = JSON.parse(res.getBody().message.content);
-          console.log("📝 Thema: " + summary.topic);
-          summary.key_facts.forEach(f => console.log("   • " + f));
+          console.log("Topic: " + summary.topic);
+          summary.key_facts.forEach(f => console.log("   - " + f));
         } catch (e) {}
     - type: tests
       code: |-
@@ -63,7 +63,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Strukturierte Zusammenfassung", function () {
+        test("Structured summary", function () {
           const s = JSON.parse(res.getBody().message.content);
           expect(s.topic).to.be.a("string");
           expect(s.key_facts).to.be.an("array").and.not.be.empty;

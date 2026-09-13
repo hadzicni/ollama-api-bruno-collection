@@ -23,7 +23,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Pull erfolgreich", function () {
+        test("Pull succeeded", function () {
           expect(res.getBody().status).to.equal("success");
         });
 
@@ -37,13 +37,13 @@ settings:
 docs: |-
   # Pull Model
 
-  `POST /api/pull` – Lädt ein Modell aus der [Ollama Library](https://ollama.com/library) herunter
-  bzw. aktualisiert es. Bereits vorhandene Layer werden übersprungen.
+  `POST /api/pull` - Downloads a model from the [Ollama library](https://ollama.com/library)
+  or updates it. Layers that already exist are skipped.
 
-  | Feld | Beschreibung |
+  | Field | Description |
   |---|---|
-  | `model` | Modellname, optional mit Tag (`qwen3:8b`) oder Namespace (`user/model`) |
-  | `insecure` | Unsichere Registry-Verbindung erlauben |
-  | `stream` | `false` → eine Antwort am Ende: `{"status": "success"}` |
+  | `model` | Model name, optionally with tag (`qwen3:8b`) or namespace (`user/model`) |
+  | `insecure` | Allow insecure registry connections |
+  | `stream` | `false` -> a single response at the end: `{"status": "success"}` |
 
-  💡 Auch Hugging-Face-GGUFs: `hf.co/bartowski/Llama-3.2-1B-Instruct-GGUF:Q4_K_M`
+  Hugging Face GGUFs work too: `hf.co/bartowski/Llama-3.2-1B-Instruct-GGUF:Q4_K_M`

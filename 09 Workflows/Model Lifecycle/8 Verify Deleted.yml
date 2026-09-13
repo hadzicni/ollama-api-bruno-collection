@@ -1,5 +1,5 @@
 info:
-  name: 8 · Verify Deleted
+  name: 8. Verify Deleted
   type: http
   seq: 8
 
@@ -16,7 +16,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Testmodell wurde entfernt", function () {
+        test("Test model was removed", function () {
           const names = res.getBody().models.map(m => m.name);
           expect(names.some(n => n.startsWith("bruno-lifecycle-test"))).to.equal(false);
         });

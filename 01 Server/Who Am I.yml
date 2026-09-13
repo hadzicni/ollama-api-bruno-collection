@@ -12,10 +12,10 @@ runtime:
   scripts:
     - type: tests
       code: |-
-        test("Angemeldet oder Signin-URL", function () {
+        test("Signed in or sign-in URL returned", function () {
           expect([200, 401]).to.include(res.getStatus());
           if (res.getStatus() === 401) {
-            console.log("🔑 Nicht angemeldet – Signin:", res.getBody().signin_url);
+            console.log("Not signed in - sign in at:", res.getBody().signin_url);
           }
         });
 
@@ -29,9 +29,9 @@ settings:
 docs: |-
   # Who Am I
 
-  `POST /api/me` – Zeigt den mit dem lokalen Server verknüpften **ollama.com-Account**.
+  `POST /api/me` - Shows the **ollama.com account** linked to the local server.
 
-  - `200` → Account-Infos (Name, E-Mail, Plan …)
-  - `401` → nicht angemeldet; die Antwort enthält eine `signin_url`
+  - `200` -> account info (name, email, plan, ...)
+  - `401` -> not signed in; the response contains a `signin_url`
 
-  Anmelden per CLI: `ollama signin`
+  Sign in via CLI: `ollama signin`

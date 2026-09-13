@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Hallo! Was kannst du alles?"
+            "content": "Hi! What can you do?"
           }
         ],
         "stream": false
@@ -29,11 +29,11 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Generierung abgeschlossen", function () {
+        test("Generation completed", function () {
           expect(res.getBody().done).to.equal(true);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");
@@ -59,15 +59,15 @@ settings:
 docs: |-
   # Chat
 
-  Einfache Chat-Anfrage mit einer User-Nachricht.
+  A simple chat request with a single user message.
 
-  ## Response (gekürzt)
+  ## Response (abridged)
 
   ```json
   {
     "model": "llama3.2",
     "created_at": "2025-10-17T23:14:07.414671Z",
-    "message": { "role": "assistant", "content": "Hallo! Ich kann …" },
+    "message": { "role": "assistant", "content": "Hi! I can ..." },
     "done": true,
     "done_reason": "stop",
     "total_duration": 174560334,

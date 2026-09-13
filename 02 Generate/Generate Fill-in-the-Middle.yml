@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{codeModel}}",
-        "prompt": "def fibonacci(n: int) -> int:\n    \"\"\"Berechnet die n-te Fibonacci-Zahl.\"\"\"\n",
+        "prompt": "def fibonacci(n: int) -> int:\n    \"\"\"Return the n-th Fibonacci number.\"\"\"\n",
         "suffix": "\n\nprint(fibonacci(10))  # 55\n",
         "stream": false,
         "options": {
@@ -26,14 +26,14 @@ runtime:
     - type: after-response
       code: |-
         const b = res.getBody();
-        if (b?.response) console.log("🧩 Eingefügter Code:\n" + b.response);
+        if (b?.response) console.log("Inserted code:\n" + b.response);
     - type: tests
       code: |-
         test("Status 200", function () {
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort enthält Text", function () {
+        test("Response contains text", function () {
           expect(res.getBody().response).to.be.a("string").and.not.be.empty;
         });
 
@@ -47,7 +47,7 @@ settings:
 docs: |-
   # Generate (Fill-in-the-Middle)
 
-  Für Code-Completion: `prompt` ist der Code **vor** dem Cursor, `suffix` der Code **danach**.
-  Das Modell erzeugt den fehlenden Teil dazwischen.
+  For code completion: `prompt` is the code **before** the cursor, `suffix` the code **after** it.
+  The model generates the missing part in between.
 
-  Unterstützt von Code-Modellen mit FIM-Template, z. B. `qwen2.5-coder`, `codellama:code`, `starcoder2`, `codegemma`.
+  Supported by code models with a FIM template, e.g. `qwen2.5-coder`, `codellama:code`, `starcoder2`, `codegemma`.

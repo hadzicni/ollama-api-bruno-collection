@@ -20,7 +20,7 @@ http:
                 "type": "image",
                 "source": { "type": "base64", "media_type": "image/jpeg", "data": "{{imageBase64}}" }
               },
-              { "type": "text", "text": "Beschreibe dieses Bild in einem Satz." }
+              { "type": "text", "text": "Describe this image in one sentence." }
             ]
           }
         ]
@@ -31,9 +31,9 @@ runtime:
   scripts:
     - type: before-request
       code: |-
-        // Lädt das Beispielbild ({{imageUrl}}) einmalig herunter und legt es Base64-kodiert
-        // in der Laufzeitvariable "imageBase64" ab. Eigenes Bild? Einfach imageUrl ändern
-        // und die Variable "imageBase64" zurücksetzen (Runtime Variables → löschen).
+        // Downloads the sample image ({{imageUrl}}) once and stores it Base64-encoded
+        // in the runtime variable "imageBase64". To use your own image, change imageUrl
+        // in the environment - the image is re-downloaded automatically.
         const cachedFor = bru.getVar("imageBase64Source");
         const imageUrl = bru.interpolate("{{imageUrl}}");
 
@@ -45,7 +45,7 @@ runtime:
           });
           bru.setVar("imageBase64", Buffer.from(response.data).toString("base64"));
           bru.setVar("imageBase64Source", imageUrl);
-          console.log("🖼️ Bild geladen:", imageUrl);
+          console.log("Image loaded:", imageUrl);
         }
     - type: tests
       code: |-
@@ -53,7 +53,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Bildbeschreibung", function () {
+        test("Image description", function () {
           expect(res.getBody().content[0].text).to.not.be.empty;
         });
 
@@ -67,4 +67,4 @@ settings:
 docs: |-
   # Messages (Vision)
 
-  Bilder als `image`-Block mit `source.type: "base64"`. URL-Quellen werden nicht unterstützt.
+  Images as an `image` block with `source.type: "base64"`. URL sources are not supported.

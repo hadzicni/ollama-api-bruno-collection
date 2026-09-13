@@ -11,14 +11,14 @@ http:
 runtime:
   scripts:
     - type: after-response
-      code: console.log("☁️ Cloud-Modelle:", (res.getBody()?.models || []).map(m => m.name).join(", "));
+      code: console.log("Cloud models:", (res.getBody()?.models || []).map(m => m.name).join(", "));
     - type: tests
       code: |-
         test("Status 200", function () {
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Cloud-Modelle", function () {
+        test("Cloud models", function () {
           expect(res.getBody().models).to.be.an("array").and.not.be.empty;
         });
 
@@ -32,4 +32,4 @@ settings:
 docs: |-
   # Cloud List Models
 
-  Alle über die Cloud-API verfügbaren Modelle.
+  All models available through the cloud API.

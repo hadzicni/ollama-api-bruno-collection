@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Erzähle eine sehr kurze Gute-Nacht-Geschichte."
+            "content": "Tell me a very short bedtime story."
           }
         ],
         "stream": true
@@ -29,7 +29,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Stream liefert NDJSON", function () {
+        test("Stream returns NDJSON", function () {
           expect(res.getHeader("content-type")).to.contain("application/x-ndjson");
         });
 
@@ -43,4 +43,4 @@ settings:
 docs: |-
   # Chat (Streaming)
 
-  NDJSON-Stream; jede Zeile enthält ein `message.content`-Fragment. Die letzte Zeile hat `done: true` und die Statistiken.
+  NDJSON stream; each line contains a `message.content` fragment. The last line has `done: true` and the statistics.

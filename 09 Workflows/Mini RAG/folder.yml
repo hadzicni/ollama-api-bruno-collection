@@ -1,5 +1,5 @@
 info:
-  name: 📚 Mini-RAG
+  name: Mini RAG
   type: folder
   seq: 2
 
@@ -8,13 +8,13 @@ request:
 
 docs:
   content: |-
-    # 📚 Mini-RAG (Retrieval Augmented Generation)
+    # Mini RAG (Retrieval Augmented Generation)
 
-    Eine komplette RAG-Pipeline in drei Requests – ganz ohne Vektordatenbank:
+    A complete RAG pipeline in three requests - no vector database required:
 
-    1. **Index** – Embeddings für eine kleine Wissensbasis erzeugen (in `ragIndex` gespeichert)
-    2. **Retrieve** – Frage einbetten und per Cosine Similarity die passendsten Dokumente finden
-    3. **Answer** – Das Modell beantwortet die Frage nur anhand des gefundenen Kontexts
+    1. **Index** - create embeddings for a small knowledge base (stored in `ragIndex`)
+    2. **Retrieve** - embed the question and find the best matching documents via cosine similarity
+    3. **Answer** - the model answers the question using only the retrieved context
 
-    Frage ändern: Variable `ragQuestion` im Request *2 · Retrieve* (Tab *Vars*) bzw. im Pre-Request-Script.
+    To change the question, set the runtime variable `ragQuestion` (default is set in the pre-request script of *2. Retrieve Context*).
   type: text/markdown

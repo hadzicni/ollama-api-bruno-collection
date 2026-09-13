@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Sag kurz Hallo."
+            "content": "Just say hello."
           }
         ],
         "keep_alive": -1,
@@ -30,7 +30,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");
@@ -46,13 +46,13 @@ settings:
 docs: |-
   # Chat (Keep Model Loaded)
 
-  `keep_alive: -1` hält das Modell **unbegrenzt** im Speicher (bis Neustart oder Unload).
+  `keep_alive: -1` keeps the model in memory **indefinitely** (until restart or unload).
 
-  | Wert | Bedeutung |
+  | Value | Meaning |
   |---|---|
-  | `"5m"` | Standard: 5 Minuten |
-  | `"1h"`, `3600` | Dauer als String oder Sekunden |
-  | `-1` | Für immer |
-  | `0` | Sofort entladen |
+  | `"5m"` | Default: 5 minutes |
+  | `"1h"`, `3600` | Duration as string or seconds |
+  | `-1` | Forever |
+  | `0` | Unload immediately |
 
-  Global setzbar über die Umgebungsvariable `OLLAMA_KEEP_ALIVE`.
+  Can be set globally via the `OLLAMA_KEEP_ALIVE` environment variable.

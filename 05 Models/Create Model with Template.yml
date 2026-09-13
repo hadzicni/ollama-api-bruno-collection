@@ -13,7 +13,7 @@ http:
         "model": "{{customModelName}}-raw",
         "from": "{{model}}",
         "template": "{{- if .System }}### System:\n{{ .System }}\n\n{{ end }}### User:\n{{ .Prompt }}\n\n### Assistant:\n",
-        "system": "Antworte ausschließlich in Stichpunkten.",
+        "system": "Answer exclusively in bullet points.",
         "parameters": {
           "stop": [
             "### User:",
@@ -43,8 +43,8 @@ settings:
 docs: |-
   # Create Model (Custom Template)
 
-  Überschreibt das Prompt-Template mit einer eigenen **Go-Template**-Definition.
+  Overrides the prompt template with a custom **Go template** definition.
 
-  Verfügbare Variablen: `.System`, `.Prompt`, `.Response`, `.Messages`, `.Tools`, `.Suffix`.
+  Available variables: `.System`, `.Prompt`, `.Response`, `.Messages`, `.Tools`, `.Suffix`.
 
-  ⚠️ Ein falsches Template verschlechtert die Antwortqualität deutlich – nur für Experimente oder eigene Modelle.
+  Warning: a wrong template significantly degrades response quality - use only for experiments or your own models.

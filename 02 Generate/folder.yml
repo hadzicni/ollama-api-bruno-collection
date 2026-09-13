@@ -1,5 +1,5 @@
 info:
-  name: ✍️ Generate
+  name: Generate
   type: folder
   seq: 2
 
@@ -8,24 +8,24 @@ request:
 
 docs:
   content: |2-
-        # ✍️ Generate – `POST /api/generate`
+        # Generate - `POST /api/generate`
 
-        Erzeugt eine Antwort auf einen einzelnen Prompt (ohne Chat-Verlauf).
+        Generates a response for a single prompt (without chat history).
       
-    ## Wichtige Parameter
+    ## Key Parameters
 
-    | Feld | Typ | Beschreibung |
+    | Field | Type | Description |
     |---|---|---|
-    | `model` | string | **Pflicht.** Modellname |
-    | `prompt` | string | Eingabetext |
-    | `suffix` | string | Text *nach* der Einfügestelle (Fill-in-the-Middle) |
-    | `images` | string[] | Base64-kodierte Bilder |
-    | `format` | "json" \| object | JSON-Modus oder JSON-Schema |
-    | `system` | string | System-Prompt (überschreibt Modelfile) |
-    | `stream` | bool | Standard `true` |
-    | `think` | bool \| "low" \| "medium" \| "high" | Thinking aktivieren |
-    | `raw` | bool | Kein Prompt-Template anwenden |
-    | `keep_alive` | string \| number | z. B. `"5m"`, `0` = sofort entladen, `-1` = dauerhaft |
-    | `logprobs` / `top_logprobs` | bool / int | Token-Wahrscheinlichkeiten |
-    | `options` | object | `temperature`, `top_k`, `top_p`, `min_p`, `seed`, `stop`, `num_ctx`, `num_predict` … |
+    | `model` | string | **Required.** Model name |
+    | `prompt` | string | Input text |
+    | `suffix` | string | Text *after* the insertion point (fill-in-the-middle) |
+    | `images` | string[] | Base64-encoded images |
+    | `format` | "json" \| object | JSON mode or JSON schema |
+    | `system` | string | System prompt (overrides the Modelfile) |
+    | `stream` | bool | Default `true` |
+    | `think` | bool \| "low" \| "medium" \| "high" | Enable thinking |
+    | `raw` | bool | Do not apply the prompt template |
+    | `keep_alive` | string \| number | e.g. `"5m"`, `0` = unload immediately, `-1` = keep forever |
+    | `logprobs` / `top_logprobs` | bool / int | Token probabilities |
+    | `options` | object | `temperature`, `top_k`, `top_p`, `min_p`, `seed`, `stop`, `num_ctx`, `num_predict`, ... |
   type: text/markdown

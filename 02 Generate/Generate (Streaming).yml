@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{model}}",
-        "prompt": "Schreibe ein kurzes Haiku über Lamas.",
+        "prompt": "Write a short haiku about llamas.",
         "stream": true
       }
   auth: inherit
@@ -24,7 +24,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Stream liefert NDJSON", function () {
+        test("Stream returns NDJSON", function () {
           expect(res.getHeader("content-type")).to.contain("application/x-ndjson");
         });
 
@@ -38,13 +38,13 @@ settings:
 docs: |-
   # Generate (Streaming)
 
-  Mit `stream: true` (Standard) liefert Ollama **NDJSON** – ein JSON-Objekt pro Zeile:
+  With `stream: true` (the default), Ollama returns **NDJSON** - one JSON object per line:
 
   ```
-  {"model":"llama3.2","created_at":"…","response":"Weiche","done":false}
-  {"model":"llama3.2","created_at":"…","response":" Wolle","done":false}
-  …
-  {"model":"llama3.2","created_at":"…","response":"","done":true,"done_reason":"stop","total_duration":…}
+  {"model":"llama3.2","created_at":"...","response":"Soft","done":false}
+  {"model":"llama3.2","created_at":"...","response":" wool","done":false}
+  ...
+  {"model":"llama3.2","created_at":"...","response":"","done":true,"done_reason":"stop","total_duration":...}
   ```
 
-  Das letzte Objekt (`done: true`) enthält die Statistiken.
+  The final object (`done: true`) contains the statistics.

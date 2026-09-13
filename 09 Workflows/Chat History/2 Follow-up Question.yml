@@ -1,5 +1,5 @@
 info:
-  name: 2 · Nachfrage stellen
+  name: 2. Follow-up Question
   type: http
   seq: 2
 
@@ -21,15 +21,15 @@ runtime:
     - type: before-request
       code: |-
         const history = JSON.parse(bru.getVar("chatHistory") || "[]");
-        if (!history.length) throw new Error("Bitte zuerst '1 · Unterhaltung starten' ausführen.");
+        if (!history.length) throw new Error("Run '1. Start Conversation' first.");
 
-        history.push({ role: "user", content: "Und gab es dort früher einmal Wasser? Woran erkennt man das?" });
+        history.push({ role: "user", content: "And was there ever water there? How can we tell?" });
         bru.setVar("chatHistory", JSON.stringify(history));
 
         const body = req.getBody();
         body.messages = history;
         req.setBody(body);
-        console.log("📜 Sende Verlauf mit " + history.length + " Nachrichten");
+        console.log("Sending history with " + history.length + " messages");
     - type: after-response
       code: |-
         const msg = res.getBody()?.message;
@@ -37,7 +37,7 @@ runtime:
           const history = JSON.parse(bru.getVar("chatHistory"));
           history.push({ role: "assistant", content: msg.content });
           bru.setVar("chatHistory", JSON.stringify(history));
-          console.log("🤖 " + msg.content);
+          console.log("Assistant: " + msg.content);
         }
     - type: tests
       code: |-
@@ -45,7 +45,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");

@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Gib mir drei Tipps für gutes Prompt-Engineering."
+            "content": "Give me three tips for good prompt engineering."
           }
         ]
       }
@@ -28,7 +28,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort erhalten", function () {
+        test("Answer received", function () {
           expect(res.getBody().choices[0].message.content).to.not.be.empty;
         });
 

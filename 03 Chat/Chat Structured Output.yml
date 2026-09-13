@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Erzähle mir etwas über Kanada. Antworte als JSON."
+            "content": "Tell me about Canada. Respond in JSON."
           }
         ],
         "stream": false,
@@ -52,14 +52,14 @@ http:
 runtime:
   scripts:
     - type: after-response
-      code: try { console.log("📋 Strukturierte Antwort:", JSON.parse(res.getBody().message.content)); } catch (e) {}
+      code: try { console.log("Structured response:", JSON.parse(res.getBody().message.content)); } catch (e) {}
     - type: tests
       code: |-
         test("Status 200", function () {
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort entspricht dem Schema", function () {
+        test("Response matches the schema", function () {
           const data = JSON.parse(res.getBody().message.content);
           expect(data).to.include.keys("name", "capital", "languages");
           expect(data.languages).to.be.an("array");
@@ -75,4 +75,4 @@ settings:
 docs: |-
   # Chat (Structured Output)
 
-  JSON-Schema in `format` erzwingt eine exakte Antwortstruktur – ideal für Datenextraktion.
+  A JSON schema in `format` enforces an exact response structure - ideal for data extraction.

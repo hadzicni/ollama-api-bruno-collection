@@ -5,57 +5,57 @@ variables:
     value: https://ollama.com
   - secret: true
     name: apiKey
-    description: API-Key von https://ollama.com/settings/keys
+    description: API key from https://ollama.com/settings/keys
   - secret: true
     name: ollamaCloudApiKey
-    description: API-Key von https://ollama.com/settings/keys
+    description: API key from https://ollama.com/settings/keys
   - name: model
     value: gpt-oss:120b
-    description: Standard-Modell für Chat & Generate
+    description: Default model for chat and generate
   - name: thinkingModel
     value: deepseek-v3.1:671b
-    description: "Modell mit Thinking-Support (think: true)"
+    description: "Model with thinking support (think: true)"
   - name: reasoningModel
     value: gpt-oss:120b
-    description: "Modell mit Reasoning-Level (think: low/medium/high)"
+    description: "Model with reasoning levels (think: low/medium/high)"
   - name: toolModel
     value: gpt-oss:120b
-    description: Modell mit Tool-Calling-Support
+    description: Model with tool calling support
   - name: visionModel
     value: qwen3-vl:235b
-    description: Multimodales Modell (Bilder)
+    description: Multimodal model (images)
   - name: embedModel
     value: embeddinggemma
-    description: Embedding-Modell
+    description: Embedding model
   - name: codeModel
     value: qwen3-coder:480b
-    description: Code-Modell mit Fill-in-the-Middle
+    description: Code model with fill-in-the-middle support
   - name: smallModel
     value: smollm2:135m
-    description: Winziges Modell (~270 MB) für den Modell-Lebenszyklus-Workflow
+    description: Tiny model (~270 MB) for the model lifecycle workflow
   - name: customModelName
     value: bruno-assistant
-    description: Name für via /api/create erzeugte Modelle
+    description: Name for models created via /api/create
   - name: copyModelName
     value: bruno-copy
-    description: Zielname für /api/copy (wird in "Delete Model" wieder gelöscht)
+    description: Destination name for /api/copy (removed again by "Delete Model")
   - name: keepAlive
     value: 5m
-    description: Wie lange ein Modell nach dem Request im Speicher bleibt
+    description: How long a model stays in memory after a request
   - name: imageUrl
     value: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/330px-Cat03.jpg
-    description: Bild für Vision-Requests (wird automatisch Base64-kodiert)
+    description: Image for vision requests (Base64-encoded automatically)
   - name: cloudUrl
     value: https://ollama.com
   - name: cloudModel
     value: gpt-oss:120b
-    description: Modell für direkte Cloud-Requests
+    description: Model for direct cloud requests
   - name: localCloudModel
     value: gpt-oss:120b-cloud
-    description: Cloud-Modell über den lokalen Server (nach "ollama signin")
+    description: Cloud model via the local server (after "ollama signin")
   - name: ollamaUsername
     value: your-username
-    description: ollama.com Benutzername (für Push)
+    description: ollama.com username (for push)
   - name: blobDigest
     value: sha256:29fdb92e57cf0827ded04ae6461b5931d01fa595843f55d36f5b275a52087dd2
-    description: SHA256-Digest für Blob-Requests
+    description: SHA256 digest for blob requests

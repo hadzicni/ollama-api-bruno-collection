@@ -1,5 +1,5 @@
 info:
-  name: ☁️ Cloud & Web Search
+  name: Cloud & Web Search
   type: folder
   seq: 8
 
@@ -10,20 +10,20 @@ request:
 
 docs:
   content: |-
-    # ☁️ Ollama Cloud & Web Search
+    # Ollama Cloud & Web Search
 
-    Requests direkt gegen **https://ollama.com** – dafür wird ein API-Key benötigt:
+    Requests sent directly to **https://ollama.com** - these require an API key:
 
-    1. Account auf [ollama.com](https://ollama.com) anlegen
-    2. Key erstellen: <https://ollama.com/settings/keys>
-    3. In der aktiven Umgebung als Secret `ollamaCloudApiKey` hinterlegen
+    1. Create an account on [ollama.com](https://ollama.com)
+    2. Create a key: <https://ollama.com/settings/keys>
+    3. Store it in the active environment as the secret `ollamaCloudApiKey`
 
-    Auth ist auf Ordnerebene als `Bearer {{ollamaCloudApiKey}}` konfiguriert.
+    Auth is configured at folder level as `Bearer {{ollamaCloudApiKey}}`.
 
-    ## Zwei Wege zu Cloud-Modellen
+    ## Two ways to use cloud models
 
-    | Weg | URL | Auth |
+    | Way | URL | Auth |
     |---|---|---|
-    | Direkt | `https://ollama.com/api/chat` | API-Key |
-    | Über lokalen Server | `http://localhost:11434/api/chat` mit `*-cloud`-Modell | `ollama signin` |
+    | Direct | `https://ollama.com/api/chat` | API key |
+    | Via local server | `http://localhost:11434/api/chat` with a `*-cloud` model | `ollama signin` |
   type: text/markdown

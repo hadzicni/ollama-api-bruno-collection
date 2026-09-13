@@ -1,5 +1,5 @@
 info:
-  name: 🧮 Embeddings
+  name: Embeddings
   type: folder
   seq: 4
 
@@ -8,17 +8,17 @@ request:
 
 docs:
   content: |-
-    # 🧮 Embeddings
+    # Embeddings
 
-    Vektor-Repräsentationen von Text für semantische Suche, Clustering und RAG.
+    Vector representations of text for semantic search, clustering and RAG.
 
-    | Feld | Beschreibung |
+    | Field | Description |
     |---|---|
-    | `model` | Embedding-Modell (z. B. `embeddinggemma`, `nomic-embed-text`, `mxbai-embed-large`, `qwen3-embedding`) |
-    | `input` | String oder String-Array |
-    | `truncate` | Zu lange Eingaben kürzen (Standard `true`); bei `false` → Fehler |
-    | `dimensions` | Anzahl der Dimensionen (für Modelle mit Matryoshka-Support) |
-    | `keep_alive`, `options` | wie bei Generate |
+    | `model` | Embedding model (e.g. `embeddinggemma`, `nomic-embed-text`, `mxbai-embed-large`, `qwen3-embedding`) |
+    | `input` | String or array of strings |
+    | `truncate` | Truncate inputs that are too long (default `true`); with `false` -> error |
+    | `dimensions` | Number of dimensions (for models with Matryoshka support) |
+    | `keep_alive`, `options` | Same as generate |
 
-    Die Vektoren sind **L2-normalisiert** – Cosine Similarity = Skalarprodukt.
+    Vectors are **L2-normalized** - cosine similarity = dot product.
   type: text/markdown

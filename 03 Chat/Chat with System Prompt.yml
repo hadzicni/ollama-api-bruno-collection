@@ -14,11 +14,11 @@ http:
         "messages": [
           {
             "role": "system",
-            "content": "Du bist ein erfahrener Senior-Softwareentwickler. Antworte präzise, mit Codebeispielen in TypeScript."
+            "content": "You are an experienced senior software engineer. Answer concisely, with code examples in TypeScript."
           },
           {
             "role": "user",
-            "content": "Wie debounce ich eine Funktion?"
+            "content": "How do I debounce a function?"
           }
         ],
         "stream": false
@@ -33,7 +33,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");

@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Hallo aus Bruno! Auf welcher Hardware läufst du ungefähr?"
+            "content": "Hello from Bruno! Roughly what kind of hardware are you running on?"
           }
         ],
         "stream": false
@@ -29,7 +29,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");
@@ -45,8 +45,8 @@ settings:
 docs: |-
   # Cloud Model via Local Server
 
-  Cloud-Modelle mit Suffix `-cloud` werden vom **lokalen** Server transparent an ollama.com weitergeleitet.
+  Cloud models with the `-cloud` suffix are transparently forwarded to ollama.com by the **local** server.
 
-  Voraussetzung: `ollama signin` (siehe *Server → Who Am I*). Einmalig: `ollama pull {{localCloudModel}}`.
+  Prerequisite: `ollama signin` (see *Server > Who Am I*). One-time: `ollama pull {{localCloudModel}}`.
 
-  ℹ️ Der Ordner sendet zwar `Bearer {{ollamaCloudApiKey}}`, der lokale Server nutzt aber die Anmeldung aus `ollama signin`.
+  The folder sends `Bearer {{ollamaCloudApiKey}}`, but the local server uses the `ollama signin` session.

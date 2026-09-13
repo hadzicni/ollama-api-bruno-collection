@@ -16,10 +16,10 @@ runtime:
   scripts:
     - type: tests
       code: |-
-        test("Blob-Status geprüft", function () {
+        test("Blob status checked", function () {
           const s = res.getStatus();
           expect([200, 404]).to.include(s);
-          console.log(s === 200 ? "✅ Blob existiert" : "❌ Blob nicht vorhanden");
+          console.log(s === 200 ? "Blob exists" : "Blob not found");
         });
 
 settings:
@@ -32,9 +32,9 @@ settings:
 docs: |-
   # Check Blob Exists
 
-  `HEAD /api/blobs/:digest` – Prüft, ob eine Datei (GGUF, Safetensors, Adapter) bereits auf dem Server liegt.
+  `HEAD /api/blobs/:digest` - Checks whether a file (GGUF, safetensors, adapter) already exists on the server.
 
-  - `200 OK` → vorhanden
-  - `404 Not Found` → hochladen mit *Push Blob*
+  - `200 OK` -> exists
+  - `404 Not Found` -> upload it with *Push Blob*
 
-  Digest berechnen: `shasum -a 256 model.gguf` → `sha256:<hash>`
+  Compute the digest: `shasum -a 256 model.gguf` -> `sha256:<hash>`

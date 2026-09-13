@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{model}}",
-        "input": "Nenne fünf Programmiersprachen mit je einem Satz Beschreibung.",
+        "input": "Name five programming languages with a one-sentence description each.",
         "stream": true
       }
   auth: inherit
@@ -24,7 +24,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Stream liefert Server-Sent Events", function () {
+        test("Stream returns server-sent events", function () {
           expect(res.getHeader("content-type")).to.contain("text/event-stream");
         });
 
@@ -38,13 +38,13 @@ settings:
 docs: |-
   # Responses (Streaming)
 
-  Semantische SSE-Events:
+  Semantic SSE events:
 
   ```
   event: response.created
   event: response.output_item.added
   event: response.output_text.delta
-  …
+  ...
   event: response.output_text.done
   event: response.completed
   ```

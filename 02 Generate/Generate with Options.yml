@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{model}}",
-        "prompt": "Nenne drei kreative Namen für ein Café.",
+        "prompt": "Suggest three creative names for a coffee shop.",
         "stream": false,
         "options": {
           "temperature": 0.9,
@@ -38,11 +38,11 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort enthält Text", function () {
+        test("Response contains text", function () {
           expect(res.getBody().response).to.be.a("string").and.not.be.empty;
         });
 
-        test("num_predict wird eingehalten", function () {
+        test("num_predict is respected", function () {
           expect(res.getBody().eval_count).to.be.at.most(200);
         });
 
@@ -56,17 +56,17 @@ settings:
 docs: |-
   # Generate with Options
 
-  Laufzeit-Optionen überschreiben die Modelfile-Parameter.
+  Runtime options override the Modelfile parameters.
 
-  | Option | Beschreibung |
+  | Option | Description |
   |---|---|
-  | `temperature` | Kreativität (0 = deterministisch, >1 = sehr zufällig) |
-  | `top_k` | Nur die K wahrscheinlichsten Tokens berücksichtigen |
-  | `top_p` | Nucleus Sampling (kumulative Wahrscheinlichkeit) |
-  | `min_p` | Mindestwahrscheinlichkeit relativ zum besten Token |
-  | `repeat_penalty` / `repeat_last_n` | Wiederholungen bestrafen |
-  | `num_ctx` | Kontextfenster in Tokens |
-  | `num_predict` | Max. Anzahl generierter Tokens (`-1` = unbegrenzt) |
-  | `seed` | Seed für reproduzierbare Ausgaben |
-  | `stop` | Stop-Sequenzen |
-  | `num_gpu`, `num_thread`, `num_batch` | Hardware-Tuning |
+  | `temperature` | Creativity (0 = deterministic, >1 = very random) |
+  | `top_k` | Only consider the K most likely tokens |
+  | `top_p` | Nucleus sampling (cumulative probability) |
+  | `min_p` | Minimum probability relative to the most likely token |
+  | `repeat_penalty` / `repeat_last_n` | Penalize repetition |
+  | `num_ctx` | Context window in tokens |
+  | `num_predict` | Max number of tokens to generate (`-1` = unlimited) |
+  | `seed` | Seed for reproducible output |
+  | `stop` | Stop sequences |
+  | `num_gpu`, `num_thread`, `num_batch` | Hardware tuning |

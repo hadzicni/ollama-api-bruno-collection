@@ -15,7 +15,7 @@ http:
           {
             "role": "user",
             "content": [
-              { "type": "text", "text": "Was siehst du auf diesem Bild?" },
+              { "type": "text", "text": "What do you see in this image?" },
               { "type": "image_url", "image_url": { "url": "data:image/jpeg;base64,{{imageBase64}}" } }
             ]
           }
@@ -28,9 +28,9 @@ runtime:
   scripts:
     - type: before-request
       code: |-
-        // Lädt das Beispielbild ({{imageUrl}}) einmalig herunter und legt es Base64-kodiert
-        // in der Laufzeitvariable "imageBase64" ab. Eigenes Bild? Einfach imageUrl ändern
-        // und die Variable "imageBase64" zurücksetzen (Runtime Variables → löschen).
+        // Downloads the sample image ({{imageUrl}}) once and stores it Base64-encoded
+        // in the runtime variable "imageBase64". To use your own image, change imageUrl
+        // in the environment - the image is re-downloaded automatically.
         const cachedFor = bru.getVar("imageBase64Source");
         const imageUrl = bru.interpolate("{{imageUrl}}");
 
@@ -42,7 +42,7 @@ runtime:
           });
           bru.setVar("imageBase64", Buffer.from(response.data).toString("base64"));
           bru.setVar("imageBase64Source", imageUrl);
-          console.log("🖼️ Bild geladen:", imageUrl);
+          console.log("Image loaded:", imageUrl);
         }
     - type: tests
       code: |-
@@ -50,7 +50,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Beschreibung erhalten", function () {
+        test("Description received", function () {
           expect(res.getBody().choices[0].message.content).to.not.be.empty;
         });
 
@@ -64,4 +64,4 @@ settings:
 docs: |-
   # Chat Completions (Vision)
 
-  Bilder als `image_url` Content-Part mit **Base64-Data-URL**. Externe HTTP-URLs werden nicht unterstützt.
+  Images as an `image_url` content part with a **Base64 data URL**. External HTTP URLs are not supported.

@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Was ist auf diesem Bild zu sehen? Welche Stimmung vermittelt es?",
+            "content": "What can you see in this image? What mood does it convey?",
             "images": ["{{imageBase64}}"]
           }
         ],
@@ -26,9 +26,9 @@ runtime:
   scripts:
     - type: before-request
       code: |-
-        // Lädt das Beispielbild ({{imageUrl}}) einmalig herunter und legt es Base64-kodiert
-        // in der Laufzeitvariable "imageBase64" ab. Eigenes Bild? Einfach imageUrl ändern
-        // und die Variable "imageBase64" zurücksetzen (Runtime Variables → löschen).
+        // Downloads the sample image ({{imageUrl}}) once and stores it Base64-encoded
+        // in the runtime variable "imageBase64". To use your own image, change imageUrl
+        // in the environment - the image is re-downloaded automatically.
         const cachedFor = bru.getVar("imageBase64Source");
         const imageUrl = bru.interpolate("{{imageUrl}}");
 
@@ -40,7 +40,7 @@ runtime:
           });
           bru.setVar("imageBase64", Buffer.from(response.data).toString("base64"));
           bru.setVar("imageBase64Source", imageUrl);
-          console.log("🖼️ Bild geladen:", imageUrl);
+          console.log("Image loaded:", imageUrl);
         }
     - type: tests
       code: |-
@@ -48,7 +48,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");
@@ -64,5 +64,5 @@ settings:
 docs: |-
   # Chat (Vision)
 
-  Bilder werden pro Nachricht im Feld `images` (Base64) mitgeschickt.
-  Das Pre-Request-Script lädt `{{imageUrl}}` automatisch.
+  Images are sent per message in the `images` field (Base64).
+  The pre-request script loads `{{imageUrl}}` automatically.

@@ -1,5 +1,5 @@
 info:
-  name: ♻️ Modell-Lebenszyklus
+  name: Model Lifecycle
   type: folder
   seq: 3
 
@@ -8,11 +8,11 @@ request:
 
 docs:
   content: |-
-    # ♻️ Modell-Lebenszyklus
+    # Model Lifecycle
 
-    End-to-End-Test der Modellverwaltung mit einem winzigen Modell (`{{smallModel}}`, ~270 MB):
+    End-to-end test of model management using a tiny model (`{{smallModel}}`, ~270 MB):
 
-    Pull → Show → Create (eigenes Modell) → Generate → PS → Unload → Delete
+    Pull -> Show -> Create (custom model) -> Generate -> PS -> Unload -> Delete
 
-    Ideal als **Smoke-Test** für eine frische Ollama-Installation.
+    Ideal as a **smoke test** for a fresh Ollama installation.
   type: text/markdown

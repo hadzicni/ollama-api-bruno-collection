@@ -16,7 +16,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Cloud-Status enthalten", function () {
+        test("Cloud status included", function () {
           expect(res.getBody()).to.have.property("cloud");
         });
 
@@ -30,7 +30,7 @@ settings:
 docs: |-
   # Get Status
 
-  `GET /api/status` – Server-Status, u. a. ob Cloud-Funktionen deaktiviert sind.
+  `GET /api/status` - Server status, including whether cloud features are disabled.
 
   ## Response
 
@@ -43,4 +43,4 @@ docs: |-
   }
   ```
 
-  Cloud-Features lassen sich z. B. über `OLLAMA_NO_CLOUD=1` abschalten – `source` zeigt dann, woher die Einstellung stammt.
+  Cloud features can be turned off e.g. via `OLLAMA_NO_CLOUD=1` - `source` then shows where the setting comes from.

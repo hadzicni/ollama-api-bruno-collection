@@ -16,7 +16,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Schreibe einen Limerick über Bruno, den API-Client."
+            "content": "Write a limerick about Bruno, the API client."
           }
         ]
       }
@@ -30,7 +30,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Stream liefert Server-Sent Events", function () {
+        test("Stream returns server-sent events", function () {
           expect(res.getHeader("content-type")).to.contain("text/event-stream");
         });
 
@@ -44,13 +44,13 @@ settings:
 docs: |-
   # Messages (Streaming)
 
-  SSE-Events im Anthropic-Format:
+  SSE events in Anthropic format:
 
   ```
   event: message_start
   event: content_block_start
-  event: content_block_delta   → {"type":"text_delta","text":"…"}
+  event: content_block_delta   -> {"type":"text_delta","text":"..."}
   event: content_block_stop
-  event: message_delta         → stop_reason, usage
+  event: message_delta         -> stop_reason, usage
   event: message_stop
   ```

@@ -1,5 +1,5 @@
 info:
-  name: 4 · Generate
+  name: 4. Generate
   type: http
   seq: 4
 
@@ -24,11 +24,11 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Generierung abgeschlossen", function () {
+        test("Generation completed", function () {
           expect(res.getBody().done).to.equal(true);
         });
 
-        test("Antwort enthält Text", function () {
+        test("Response contains text", function () {
           expect(res.getBody().response).to.be.a("string").and.not.be.empty;
         });
 

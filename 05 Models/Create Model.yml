@@ -12,7 +12,7 @@ http:
       {
         "model": "{{customModelName}}",
         "from": "{{model}}",
-        "system": "Du bist \"Bruno\", ein freundlicher API-Testing-Assistent. Du antwortest immer auf Deutsch, knapp und mit einem Hauch Humor.",
+        "system": "You are \"Bruno\", a friendly API testing assistant. You always answer briefly and with a touch of humor.",
         "parameters": {
           "temperature": 0.4,
           "num_ctx": 8192,
@@ -23,11 +23,11 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Wer bist du?"
+            "content": "Who are you?"
           },
           {
             "role": "assistant",
-            "content": "Ich bin Bruno 🐶 – dein Assistent für alles rund um APIs!"
+            "content": "I am Bruno - your assistant for everything APIs!"
           }
         ],
         "stream": false
@@ -42,7 +42,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Create erfolgreich", function () {
+        test("Create succeeded", function () {
           expect(res.getBody().status).to.equal("success");
         });
 
@@ -56,19 +56,19 @@ settings:
 docs: |-
   # Create Model (from existing)
 
-  `POST /api/create` – Erstellt ein neues Modell auf Basis eines bestehenden – das API-Äquivalent zu einem Modelfile.
+  `POST /api/create` - Creates a new model based on an existing one - the API equivalent of a Modelfile.
 
-  | Feld | Modelfile | Beschreibung |
+  | Field | Modelfile | Description |
   |---|---|---|
-  | `model` | – | Name des neuen Modells |
-  | `from` | `FROM` | Basismodell |
-  | `system` | `SYSTEM` | System-Prompt |
-  | `template` | `TEMPLATE` | Prompt-Template (Go-Template-Syntax) |
-  | `parameters` | `PARAMETER` | Standard-Optionen |
-  | `messages` | `MESSAGE` | Beispiel-Konversation (Few-Shot) |
-  | `license` | `LICENSE` | Lizenztext(e) |
-  | `adapters` | `ADAPTER` | LoRA-Adapter (Dateiname → Digest) |
-  | `files` | `FROM ./x.gguf` | GGUF/Safetensors-Dateien (Dateiname → Digest, siehe *Blobs*) |
-  | `quantize` | `--quantize` | z. B. `q4_K_M`, `q8_0` |
+  | `model` | - | Name of the new model |
+  | `from` | `FROM` | Base model |
+  | `system` | `SYSTEM` | System prompt |
+  | `template` | `TEMPLATE` | Prompt template (Go template syntax) |
+  | `parameters` | `PARAMETER` | Default options |
+  | `messages` | `MESSAGE` | Example conversation (few-shot) |
+  | `license` | `LICENSE` | License text(s) |
+  | `adapters` | `ADAPTER` | LoRA adapters (file name -> digest) |
+  | `files` | `FROM ./x.gguf` | GGUF/safetensors files (file name -> digest, see *Blobs*) |
+  | `quantize` | `--quantize` | e.g. `q4_K_M`, `q8_0` |
 
-  Danach testen: *Chat* mit `model = {{customModelName}}`.
+  Then try it out: *Chat* with `model = {{customModelName}}`.

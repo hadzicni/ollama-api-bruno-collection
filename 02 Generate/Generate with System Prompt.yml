@@ -11,8 +11,8 @@ http:
     data: |-
       {
         "model": "{{model}}",
-        "system": "Du bist ein Pirat. Antworte immer im Piratenslang und maximal in drei Sätzen.",
-        "prompt": "Erkläre, was eine REST API ist.",
+        "system": "You are a pirate. Always answer in pirate speak and in no more than three sentences.",
+        "prompt": "Explain what a REST API is.",
         "stream": false
       }
   auth: inherit
@@ -25,7 +25,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort enthält Text", function () {
+        test("Response contains text", function () {
           expect(res.getBody().response).to.be.a("string").and.not.be.empty;
         });
 
@@ -39,4 +39,4 @@ settings:
 docs: |-
   # Generate with System Prompt
 
-  `system` überschreibt den im Modelfile definierten System-Prompt für diesen einen Request.
+  `system` overrides the system prompt defined in the Modelfile for this single request.

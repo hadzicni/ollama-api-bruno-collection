@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{thinkingModel}}",
-        "prompt": "Wie viele \"r\" sind im Wort \"Erdbeerrrkuchen\"?",
+        "prompt": "How many letter \"r\" are in the word \"strawberrry\"?",
         "think": true,
         "stream": false
       }
@@ -22,18 +22,18 @@ runtime:
     - type: after-response
       code: |-
         const b = res.getBody();
-        if (b?.thinking) console.log("🧠 Thinking:\n" + b.thinking);
+        if (b?.thinking) console.log("Thinking:\n" + b.thinking);
     - type: tests
       code: |-
         test("Status 200", function () {
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort enthält Text", function () {
+        test("Response contains text", function () {
           expect(res.getBody().response).to.be.a("string").and.not.be.empty;
         });
 
-        test("Thinking-Ausgabe getrennt geliefert", function () {
+        test("Thinking output returned separately", function () {
           expect(res.getBody().thinking).to.be.a("string").and.not.be.empty;
         });
 
@@ -47,7 +47,7 @@ settings:
 docs: |-
   # Generate (Thinking)
 
-  Mit `think: true` liefern Thinking-Modelle (z. B. qwen3, deepseek-r1) ihre Gedankengänge
-  getrennt im Feld `thinking`, die finale Antwort in `response`.
+  With `think: true`, thinking models (e.g. qwen3, deepseek-r1) return their reasoning
+  separately in the `thinking` field, and the final answer in `response`.
 
-  `think: false` deaktiviert das Denken bei Modellen, die das unterstützen.
+  `think: false` disables thinking for models that support it.

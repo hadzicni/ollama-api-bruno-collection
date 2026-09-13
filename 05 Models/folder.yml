@@ -1,5 +1,5 @@
 info:
-  name: 📦 Models
+  name: Models
   type: folder
   seq: 5
 
@@ -8,9 +8,9 @@ request:
 
 docs:
   content: |-
-    # 📦 Models
+    # Models
 
-    Lokale Modelle verwalten: auflisten, Details anzeigen, herunterladen, kopieren, erstellen, hochladen und löschen.
+    Manage local models: list, show details, pull, copy, create, push and delete.
 
-    ⚠️ **Delete Model** löscht standardmäßig nur `{{copyModelName}}` – die durch *Copy Model* erzeugte Kopie.
+    Note: **Delete Model** only deletes `{{copyModelName}}` by default - the copy created by *Copy Model*.
   type: text/markdown

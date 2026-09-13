@@ -14,19 +14,19 @@ http:
         "messages": [
           {
             "role": "system",
-            "content": "Du bist ein hilfreicher Reiseassistent."
+            "content": "You are a helpful travel assistant."
           },
           {
             "role": "user",
-            "content": "Ich plane einen Wochenendtrip nach Wien."
+            "content": "I am planning a weekend trip to Vienna."
           },
           {
             "role": "assistant",
-            "content": "Wunderbar! Wien bietet viel: Schloss Schönbrunn, den Stephansdom, den Naschmarkt und natürlich die Kaffeehauskultur. Was interessiert dich am meisten?"
+            "content": "Wonderful! Vienna has a lot to offer: Schönbrunn Palace, St. Stephen's Cathedral, the Naschmarkt and of course its coffee house culture. What interests you most?"
           },
           {
             "role": "user",
-            "content": "Kulinarik! Welche drei Gerichte muss ich probieren?"
+            "content": "Food! Which three dishes do I have to try?"
           }
         ],
         "stream": false
@@ -41,7 +41,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");
@@ -57,7 +57,7 @@ settings:
 docs: |-
   # Chat (Multi-Turn Conversation)
 
-  Ollama ist **zustandslos** – der gesamte Verlauf muss bei jedem Request mitgeschickt werden.
-  Frühere Antworten des Modells kommen als `role: "assistant"` in das Array.
+  Ollama is **stateless** - the entire history must be sent with every request.
+  Previous model responses are added to the array as `role: "assistant"`.
 
-  👉 Siehe *Workflows → Chat-Verlauf* für einen automatisch mitwachsenden Verlauf.
+  See *Workflows > Chat History* for a history that grows automatically.

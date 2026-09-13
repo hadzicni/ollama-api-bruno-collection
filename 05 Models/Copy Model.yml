@@ -33,7 +33,7 @@ settings:
 docs: |-
   # Copy Model
 
-  `POST /api/copy` – Legt eine Kopie unter neuem Namen an. Layer werden **nicht** dupliziert
-  (nur ein neues Manifest), die Kopie kostet also praktisch keinen Speicher.
+  `POST /api/copy` - Creates a copy under a new name. Layers are **not** duplicated
+  (only a new manifest), so the copy uses practically no extra disk space.
 
-  Antwort: `200 OK` ohne Body, bzw. `404`, wenn das Quellmodell nicht existiert.
+  Response: `200 OK` with no body, or `404` if the source model does not exist.

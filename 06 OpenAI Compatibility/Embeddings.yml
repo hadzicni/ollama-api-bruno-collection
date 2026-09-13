@@ -12,8 +12,8 @@ http:
       {
         "model": "{{embedModel}}",
         "input": [
-          "Erster Text",
-          "Zweiter Text"
+          "First text",
+          "Second text"
         ],
         "encoding_format": "float",
         "dimensions": 512
@@ -28,7 +28,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Zwei Embeddings im OpenAI-Format", function () {
+        test("Two embeddings in OpenAI format", function () {
           const b = res.getBody();
           expect(b.object).to.equal("list");
           expect(b.data).to.have.lengthOf(2);
@@ -45,4 +45,4 @@ settings:
 docs: |-
   # Embeddings
 
-  `encoding_format`: `"float"` oder `"base64"`. `dimensions` nur bei unterstützten Modellen.
+  `encoding_format`: `"float"` or `"base64"`. `dimensions` only for supported models.

@@ -15,13 +15,13 @@ http:
         "tools": [
           {
             "name": "get_current_weather",
-            "description": "Liefert das aktuelle Wetter für eine Stadt",
+            "description": "Get the current weather for a city",
             "input_schema": {
               "type": "object",
               "properties": {
                 "city": {
                   "type": "string",
-                  "description": "Name der Stadt, z. B. Berlin"
+                  "description": "Name of the city, e.g. Berlin"
                 },
                 "unit": {
                   "type": "string",
@@ -29,7 +29,7 @@ http:
                     "celsius",
                     "fahrenheit"
                   ],
-                  "description": "Temperatureinheit"
+                  "description": "Temperature unit"
                 }
               },
               "required": [
@@ -41,7 +41,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Brauche ich heute in Berlin einen Regenschirm?"
+            "content": "Do I need an umbrella in Berlin today?"
           }
         ]
       }
@@ -55,7 +55,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("tool_use Block", function () {
+        test("tool_use block", function () {
           const b = res.getBody();
           expect(b.stop_reason).to.equal("tool_use");
           const block = b.content.find(c => c.type === "tool_use");
@@ -74,10 +74,10 @@ settings:
 docs: |-
   # Messages (Tools)
 
-  Tools im Anthropic-Format mit `input_schema`. Die Antwort enthält einen `tool_use`-Block:
+  Tools in Anthropic format with `input_schema`. The response contains a `tool_use` block:
 
   ```json
-  { "type": "tool_use", "id": "toolu_…", "name": "get_current_weather", "input": { "city": "Berlin" } }
+  { "type": "tool_use", "id": "toolu_...", "name": "get_current_weather", "input": { "city": "Berlin" } }
   ```
 
-  Die `id` wird in `anthropicToolUseId` gespeichert → weiter mit **Messages (Tool Result)**.
+  The `id` is stored in `anthropicToolUseId` -> continue with **Messages (Tool Result)**.

@@ -1,5 +1,5 @@
 info:
-  name: 2 · Kontext abrufen
+  name: 2. Retrieve Context
   type: http
   seq: 2
 
@@ -20,9 +20,9 @@ runtime:
     - type: before-request
       code: |-
         if (!bru.getVar("ragQuestion")) {
-          bru.setVar("ragQuestion", "Wie lange gilt die Garantie auf die HerdBox und was ist vorinstalliert?");
+          bru.setVar("ragQuestion", "How long is the HerdBox warranty and what comes preinstalled?");
         }
-        if (!bru.getVar("ragIndex")) throw new Error("Bitte zuerst '1 · Dokumente indexieren' ausführen.");
+        if (!bru.getVar("ragIndex")) throw new Error("Run '1. Index Documents' first.");
     - type: after-response
       code: |-
         const q = res.getBody()?.embeddings?.[0];
@@ -33,7 +33,7 @@ runtime:
             .map(d => ({ text: d.text, score: dot(q, d.embedding) }))
             .sort((a, b) => b.score - a.score);
 
-          console.log("🔍 Frage: " + bru.getVar("ragQuestion"));
+          console.log("Question: " + bru.getVar("ragQuestion"));
           ranked.forEach(d => console.log("   " + d.score.toFixed(3) + "  " + d.text));
 
           const top = ranked.slice(0, 2);
@@ -46,7 +46,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Relevanter Kontext gefunden", function () {
+        test("Relevant context found", function () {
           expect(bru.getVar("ragContext")).to.contain("HerdBox");
         });
 

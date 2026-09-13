@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Antworte nur mit Ja oder Nein: Ist Wasser nass?"
+            "content": "Answer only with Yes or No: Is water wet?"
           }
         ],
         "logprobs": true,
@@ -33,7 +33,7 @@ runtime:
       code: |-
         const first = res.getBody()?.logprobs?.[0];
         if (first) {
-          console.log("🎲 Erstes Token:", JSON.stringify(first.token));
+          console.log("First token:", JSON.stringify(first.token));
           (first.top_logprobs || []).forEach(a => console.log("   ", JSON.stringify(a.token), (Math.exp(a.logprob) * 100).toFixed(2) + "%"));
         }
     - type: tests
@@ -42,7 +42,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Logprobs enthalten", function () {
+        test("Logprobs included", function () {
           expect(res.getBody().logprobs).to.be.an("array").and.not.be.empty;
         });
 
@@ -56,4 +56,4 @@ settings:
 docs: |-
   # Chat (Logprobs)
 
-  Zeigt, wie sicher sich das Modell bei jedem Token ist – nützlich für Klassifikation und Confidence-Scores.
+  Shows how confident the model is about each token - useful for classification and confidence scores.

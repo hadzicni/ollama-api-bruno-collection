@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Extrahiere die Daten: \"Max Mustermann, 34, wohnt in Hamburg und arbeitet als Tischler.\""
+            "content": "Extract the data: \"John Smith, 34, lives in Boston and works as a carpenter.\""
           }
         ],
         "response_format": {
@@ -60,7 +60,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort entspricht dem Schema", function () {
+        test("Response matches the schema", function () {
           const data = JSON.parse(res.getBody().choices[0].message.content);
           expect(data).to.have.all.keys("name", "age", "city", "job");
         });
@@ -75,5 +75,5 @@ settings:
 docs: |-
   # Chat Completions (JSON Schema)
 
-  `response_format` mit `type: "json_schema"` → Structured Outputs.
-  Für einfachen JSON-Modus: `{"type": "json_object"}`.
+  `response_format` with `type: "json_schema"` -> structured outputs.
+  For plain JSON mode use `{"type": "json_object"}`.

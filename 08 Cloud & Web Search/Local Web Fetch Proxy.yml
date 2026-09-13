@@ -30,6 +30,6 @@ settings:
   forwardAuthorizationHeader: true
 
 docs: |-
-  # Local Web Fetch Proxy ⚗️
+  # Local Web Fetch Proxy
 
-  `POST /api/experimental/web_fetch` – Wie *Web Fetch*, aber über den lokalen, angemeldeten Server.
+  `POST /api/experimental/web_fetch` - Same as *Web Fetch*, but via the local, signed-in server.

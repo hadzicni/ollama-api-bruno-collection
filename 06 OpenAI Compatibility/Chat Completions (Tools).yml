@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Wie ist das Wetter in München?"
+            "content": "What is the weather like in Munich?"
           }
         ],
         "tools": [
@@ -22,13 +22,13 @@ http:
             "type": "function",
             "function": {
               "name": "get_current_weather",
-              "description": "Liefert das aktuelle Wetter für eine Stadt",
+              "description": "Get the current weather for a city",
               "parameters": {
                 "type": "object",
                 "properties": {
                   "city": {
                     "type": "string",
-                    "description": "Name der Stadt, z. B. Berlin"
+                    "description": "Name of the city, e.g. Berlin"
                   },
                   "unit": {
                     "type": "string",
@@ -36,7 +36,7 @@ http:
                       "celsius",
                       "fahrenheit"
                     ],
-                    "description": "Temperatureinheit"
+                    "description": "Temperature unit"
                   }
                 },
                 "required": [
@@ -57,7 +57,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Tool-Call im OpenAI-Format", function () {
+        test("Tool call in OpenAI format", function () {
           const choice = res.getBody().choices[0];
           expect(choice.finish_reason).to.equal("tool_calls");
           const call = choice.message.tool_calls[0];
@@ -75,5 +75,5 @@ settings:
 docs: |-
   # Chat Completions (Tools)
 
-  Im OpenAI-Format sind `function.arguments` ein **JSON-String** (nicht Objekt wie in `/api/chat`),
-  und jeder Tool-Call hat eine `id`. Tool-Ergebnisse werden mit `role: "tool"` und `tool_call_id` zurückgegeben.
+  In the OpenAI format, `function.arguments` is a **JSON string** (not an object as in `/api/chat`),
+  and every tool call has an `id`. Tool results are sent back with `role: "tool"` and `tool_call_id`.

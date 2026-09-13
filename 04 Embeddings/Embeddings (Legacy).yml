@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{embedModel}}",
-        "prompt": "Dies ist der veraltete Embeddings-Endpunkt."
+        "prompt": "This is the deprecated embeddings endpoint."
       }
   auth: inherit
 
@@ -23,7 +23,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Einzelner Vektor im Feld 'embedding'", function () {
+        test("Single vector in the 'embedding' field", function () {
           expect(res.getBody().embedding).to.be.an("array").and.not.be.empty;
         });
 
@@ -35,11 +35,11 @@ settings:
   forwardAuthorizationHeader: true
 
 docs: |-
-  # Embeddings (Legacy) ⚠️
+  # Embeddings (Legacy)
 
-  `POST /api/embeddings` – **veraltet**, durch `/api/embed` ersetzt.
+  `POST /api/embeddings` - **deprecated**, superseded by `/api/embed`.
 
-  Unterschiede:
-  - Feld `prompt` statt `input` (nur ein String)
-  - Antwort `embedding` (ein Vektor) statt `embeddings` (Array)
-  - Vektoren sind **nicht** normalisiert
+  Differences:
+  - `prompt` field instead of `input` (a single string only)
+  - Response `embedding` (one vector) instead of `embeddings` (array)
+  - Vectors are **not** normalized

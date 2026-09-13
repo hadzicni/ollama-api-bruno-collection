@@ -13,10 +13,10 @@ runtime:
     - type: after-response
       code: |-
         const models = res.getBody()?.models || [];
-        if (!models.length) console.log("💤 Aktuell ist kein Modell geladen.");
+        if (!models.length) console.log("No model is currently loaded.");
         models.forEach(function (m) {
           const vramPct = m.size ? Math.round((m.size_vram / m.size) * 100) : 0;
-          console.log("🟢 " + m.name + " | " + (m.size / 1024 ** 3).toFixed(2) + " GB | " + vramPct + "% GPU | Kontext: " + (m.context_length || "?") + " | entlädt: " + m.expires_at);
+          console.log(m.name + " | " + (m.size / 1024 ** 3).toFixed(2) + " GB | " + vramPct + "% GPU | context: " + (m.context_length || "?") + " | expires: " + m.expires_at);
         });
     - type: tests
       code: |-
@@ -24,7 +24,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Liste geladener Modelle", function () {
+        test("List of loaded models", function () {
           expect(res.getBody().models).to.be.an("array");
         });
 
@@ -38,7 +38,7 @@ settings:
 docs: |-
   # List Running Models
 
-  `GET /api/ps` – Aktuell in den Speicher geladene Modelle (CLI: `ollama ps`).
+  `GET /api/ps` - Models currently loaded into memory (CLI: `ollama ps`).
 
   ## Response
 
@@ -59,4 +59,4 @@ docs: |-
   }
   ```
 
-  `size_vram / size` zeigt, wie viel des Modells auf der GPU liegt.
+  `size_vram / size` shows how much of the model is on the GPU.

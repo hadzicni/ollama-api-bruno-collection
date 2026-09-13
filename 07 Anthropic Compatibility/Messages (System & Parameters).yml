@@ -12,11 +12,11 @@ http:
       {
         "model": "{{model}}",
         "max_tokens": 512,
-        "system": "Du bist ein Sommelier. Antworte elegant und in maximal 3 Sätzen.",
+        "system": "You are a sommelier. Answer elegantly and in no more than 3 sentences.",
         "messages": [
           {
             "role": "user",
-            "content": "Welcher Wein passt zu Käsespätzle?"
+            "content": "Which wine goes well with mac and cheese?"
           }
         ],
         "temperature": 0.8,
@@ -36,7 +36,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Textantwort", function () {
+        test("Text response", function () {
           expect(res.getBody().content[0].text).to.not.be.empty;
         });
 

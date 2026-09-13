@@ -26,4 +26,4 @@ settings:
 docs: |-
   # Health Check (HEAD)
 
-  `HEAD /` – Wie der Health Check, aber ohne Response-Body. Nur der Statuscode zählt.
+  `HEAD /` - Same as the health check, but without a response body. Only the status code matters.

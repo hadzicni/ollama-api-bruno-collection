@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Zähle von 1 bis 10 auf Spanisch."
+            "content": "Count from 1 to 10 in Spanish."
           }
         ],
         "stream": true,
@@ -32,7 +32,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Stream liefert Server-Sent Events", function () {
+        test("Stream returns server-sent events", function () {
           expect(res.getHeader("content-type")).to.contain("text/event-stream");
         });
 
@@ -46,7 +46,7 @@ settings:
 docs: |-
   # Chat Completions (Streaming)
 
-  Server-Sent Events im OpenAI-Format:
+  Server-sent events in OpenAI format:
 
   ```
   data: {"id":"chatcmpl-1","object":"chat.completion.chunk","choices":[{"index":0,"delta":{"role":"assistant","content":"uno"}}]}

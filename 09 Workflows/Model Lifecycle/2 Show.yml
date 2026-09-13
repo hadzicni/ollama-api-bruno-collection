@@ -1,5 +1,5 @@
 info:
-  name: 2 · Show
+  name: 2. Show
   type: http
   seq: 2
 
@@ -22,7 +22,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Modell kann Text generieren", function () {
+        test("Model can generate text", function () {
           expect(res.getBody().capabilities).to.include("completion");
         });
 

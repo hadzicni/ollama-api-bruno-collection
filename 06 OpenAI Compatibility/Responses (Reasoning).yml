@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{reasoningModel}}",
-        "input": "Welche Zahl kommt als Nächstes: 2, 6, 12, 20, 30, ?",
+        "input": "Which number comes next: 2, 6, 12, 20, 30, ?",
         "reasoning": {
           "effort": "high",
           "summary": "auto"
@@ -27,7 +27,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Reasoning-Item vorhanden", function () {
+        test("Reasoning item present", function () {
           const types = res.getBody().output.map(o => o.type);
           expect(types).to.include("reasoning");
         });
@@ -43,4 +43,4 @@ docs: |-
   # Responses (Reasoning)
 
   `reasoning.effort`: `low` | `medium` | `high`, `reasoning.summary`: `auto` | `concise` | `detailed`.
-  Das Denken erscheint als Output-Item `type: "reasoning"`.
+  The reasoning appears as an output item with `type: "reasoning"`.

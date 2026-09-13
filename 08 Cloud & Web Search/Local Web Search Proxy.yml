@@ -31,9 +31,9 @@ settings:
   forwardAuthorizationHeader: true
 
 docs: |-
-  # Local Web Search Proxy ⚗️
+  # Local Web Search Proxy
 
-  `POST /api/experimental/web_search` – Der lokale Server leitet die Suche mit dem Account aus `ollama signin`
-  an ollama.com weiter (der Authorization-Header wird entfernt).
+  `POST /api/experimental/web_search` - The local server forwards the search to ollama.com using the
+  account from `ollama signin` (the Authorization header is stripped).
 
-  > ⚠️ Experimentell – kann sich ändern.
+  > **Experimental** - may change.

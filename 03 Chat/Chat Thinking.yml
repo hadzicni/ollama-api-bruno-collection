@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Wenn 5 Maschinen 5 Minuten für 5 Teile brauchen – wie lange brauchen 100 Maschinen für 100 Teile?"
+            "content": "If 5 machines take 5 minutes to make 5 parts, how long do 100 machines take to make 100 parts?"
           }
         ],
         "think": true,
@@ -27,20 +27,20 @@ runtime:
     - type: after-response
       code: |-
         const m = res.getBody()?.message;
-        if (m?.thinking) console.log("🧠 Thinking:\n" + m.thinking + "\n\n💬 Antwort:\n" + m.content);
+        if (m?.thinking) console.log("Thinking:\n" + m.thinking + "\n\nAnswer:\n" + m.content);
     - type: tests
       code: |-
         test("Status 200", function () {
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");
         });
 
-        test("Thinking enthalten", function () {
+        test("Thinking included", function () {
           expect(res.getBody().message.thinking).to.be.a("string").and.not.be.empty;
         });
 
@@ -54,6 +54,6 @@ settings:
 docs: |-
   # Chat (Thinking)
 
-  `message.thinking` enthält den Denkprozess, `message.content` die Antwort.
+  `message.thinking` contains the reasoning, `message.content` the answer.
 
-  Beim Weiterführen der Konversation kann `thinking` in der Assistant-Nachricht mitgeschickt werden.
+  When continuing the conversation, `thinking` can be sent back in the assistant message.

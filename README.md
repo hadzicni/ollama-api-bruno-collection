@@ -1,32 +1,32 @@
-# 🦙 Ollama API – Bruno Collection
+# Ollama API - Bruno Collection
 
-Eine umfangreiche [Bruno](https://www.usebruno.com/)-Collection für die [Ollama REST API](https://docs.ollama.com/api) – lokal, im Netzwerk oder über Ollama Cloud.
+A comprehensive [Bruno](https://www.usebruno.com/) collection for the [Ollama REST API](https://docs.ollama.com/api) - local, on your network, or via Ollama Cloud.
 
-## Inhalt
+## Contents
 
-| Ordner | Requests |
+| Folder | Requests |
 |---|---|
-| 🖥️ Server | Health Check, Version, Status, Account, Modell-Empfehlungen |
-| ✍️ Generate | `/api/generate` – Streaming, JSON/Structured Output, Thinking, Vision, Fill-in-the-Middle, Raw, Logprobs, Load/Unload |
-| 💬 Chat | `/api/chat` – Multi-Turn, Structured Output, Thinking, Tool Calling, Vision, Logprobs |
-| 🧮 Embeddings | `/api/embed`, `/api/embeddings` (Legacy) |
-| 📦 Models | Tags, PS, Show, Pull, Push, Copy, Create, Delete, Blobs |
-| 🔌 OpenAI Compatibility | `/v1/chat/completions`, `/v1/completions`, `/v1/embeddings`, `/v1/models`, `/v1/responses` |
-| 🅰️ Anthropic Compatibility | `/v1/messages` inkl. Streaming, Tools, Thinking, Vision |
-| ☁️ Cloud & Web Search | Web Search, Web Fetch, Cloud-Modelle |
-| 🔁 Workflows | Chat-Verlauf, Mini-RAG, Modell-Lebenszyklus |
+| Server | Health check, version, status, account, model recommendations |
+| Generate | `/api/generate` - streaming, JSON/structured output, thinking, vision, fill-in-the-middle, raw mode, logprobs, load/unload |
+| Chat | `/api/chat` - multi-turn, structured output, thinking, tool calling, vision, logprobs |
+| Embeddings | `/api/embed`, `/api/embeddings` (legacy) |
+| Models | Tags, PS, show, pull, push, copy, create, delete, blobs |
+| OpenAI Compatibility | `/v1/chat/completions`, `/v1/completions`, `/v1/embeddings`, `/v1/models`, `/v1/responses` |
+| Anthropic Compatibility | `/v1/messages` incl. streaming, tools, thinking, vision |
+| Cloud & Web Search | Web search, web fetch, cloud models |
+| Workflows | Chat history, mini RAG, model lifecycle |
 
-## Schnellstart
+## Quick Start
 
-1. Bruno (≥ 3.0, YAML/OpenCollection-Format) installieren
-2. **Open Collection** → diesen Ordner wählen
-3. Umgebung **Local** auswählen
-4. Modelle laden:
+1. Install Bruno (YAML/OpenCollection format support required)
+2. **Open Collection** and select this folder
+3. Select the **Local** environment
+4. Pull the models:
 
 ```bash
 ollama pull llama3.2 && ollama pull qwen3 && ollama pull gemma3 && ollama pull embeddinggemma
 ```
 
-Für Web Search & Cloud einen API-Key unter <https://ollama.com/settings/keys> erstellen und in der Umgebung als Secret `ollamaCloudApiKey` eintragen. Secrets werden nicht in den Dateien gespeichert.
+For web search and cloud requests, create an API key at <https://ollama.com/settings/keys> and add it to the environment as the secret `ollamaCloudApiKey`. Secrets are not stored in the collection files.
 
-Weitere Details stehen in der Collection-Dokumentation in Bruno.
+See the collection documentation inside Bruno for more details.

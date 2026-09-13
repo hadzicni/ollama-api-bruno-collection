@@ -19,7 +19,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Drei Freunde teilen sich eine Rechnung von 75 €. Einer zahlt doppelt so viel wie jeder der anderen beiden. Wie viel zahlt jeder?"
+            "content": "Three friends split a $75 bill. One pays twice as much as each of the other two. How much does each pay?"
           }
         ]
       }
@@ -30,8 +30,8 @@ runtime:
     - type: after-response
       code: |-
         (res.getBody()?.content || []).forEach(function (c) {
-          if (c.type === "thinking") console.log("🧠 " + c.thinking);
-          if (c.type === "text") console.log("💬 " + c.text);
+          if (c.type === "thinking") console.log("Thinking: " + c.thinking);
+          if (c.type === "text") console.log("Answer: " + c.text);
         });
     - type: tests
       code: |-
@@ -39,7 +39,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("thinking- und text-Block", function () {
+        test("thinking and text blocks", function () {
           const types = res.getBody().content.map(c => c.type);
           expect(types).to.include("thinking");
           expect(types).to.include("text");
@@ -55,5 +55,5 @@ settings:
 docs: |-
   # Messages (Extended Thinking)
 
-  `thinking: {"type": "enabled", "budget_tokens": N}` aktiviert das Denken.
-  Die Antwort enthält einen `thinking`-Block vor dem `text`-Block.
+  `thinking: {"type": "enabled", "budget_tokens": N}` enables thinking.
+  The response contains a `thinking` block before the `text` block.

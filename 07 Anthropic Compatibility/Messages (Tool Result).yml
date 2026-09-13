@@ -15,7 +15,7 @@ http:
         "tools": [
           {
             "name": "get_current_weather",
-            "description": "Liefert das aktuelle Wetter für eine Stadt",
+            "description": "Get the current weather for a city",
             "input_schema": {
               "type": "object",
               "properties": { "city": { "type": "string" } },
@@ -24,7 +24,7 @@ http:
           }
         ],
         "messages": [
-          { "role": "user", "content": "Brauche ich heute in Berlin einen Regenschirm?" },
+          { "role": "user", "content": "Do I need an umbrella in Berlin today?" },
           {
             "role": "assistant",
             "content": [
@@ -37,7 +37,7 @@ http:
               {
                 "type": "tool_result",
                 "tool_use_id": "{{anthropicToolUseId}}",
-                "content": "{\"city\":\"Berlin\",\"condition\":\"Starkregen\",\"precipitation_probability\":90,\"temperature\":12}"
+                "content": "{\"city\":\"Berlin\",\"condition\":\"heavy rain\",\"precipitation_probability\":90,\"temperature\":12}"
               }
             ]
           }
@@ -49,7 +49,7 @@ runtime:
   scripts:
     - type: before-request
       code: |-
-        // Fallback-ID, falls "Messages (Tools)" nicht vorher ausgeführt wurde
+        // Fallback ID in case "Messages (Tools)" has not been run before
         if (!bru.getVar("anthropicToolUseId")) bru.setVar("anthropicToolUseId", "toolu_bruno_example_01");
     - type: tests
       code: |-
@@ -57,7 +57,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Finale Textantwort", function () {
+        test("Final text response", function () {
           const b = res.getBody();
           expect(b.stop_reason).to.equal("end_turn");
           expect(b.content.find(c => c.type === "text").text).to.not.be.empty;
@@ -73,4 +73,4 @@ settings:
 docs: |-
   # Messages (Tool Result)
 
-  Tool-Ergebnisse gehen als `tool_result`-Block in einer **User**-Nachricht zurück, verknüpft über `tool_use_id`.
+  Tool results are sent back as a `tool_result` block in a **user** message, linked via `tool_use_id`.

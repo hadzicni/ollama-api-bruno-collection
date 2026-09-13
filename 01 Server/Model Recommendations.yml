@@ -13,7 +13,7 @@ runtime:
     - type: after-response
       code: |-
         const recs = res.getBody()?.recommendations;
-        if (Array.isArray(recs)) console.log("💡 Empfohlene Modelle:", recs.map(r => r.model || r.name || r).join(", "));
+        if (Array.isArray(recs)) console.log("Recommended models:", recs.map(r => r.model || r.name || r).join(", "));
     - type: tests
       code: |-
         test("Status 200", function () {
@@ -28,8 +28,8 @@ settings:
   forwardAuthorizationHeader: true
 
 docs: |-
-  # Model Recommendations ⚗️
+  # Model Recommendations
 
-  `GET /api/experimental/model-recommendations` – Liefert eine Liste empfohlener Modelle.
+  `GET /api/experimental/model-recommendations` - Returns a list of recommended models.
 
-  > ⚠️ **Experimentell** – Pfad und Format können sich ohne Ankündigung ändern.
+  > **Experimental** - path and format may change without notice.

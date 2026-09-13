@@ -14,25 +14,25 @@ runtime:
       code: |-
         const models = res.getBody()?.models || [];
         const gb = b => (b / 1024 ** 3).toFixed(2) + " GB";
-        console.log("📦 " + models.length + " Modell(e) installiert:");
+        console.log(models.length + " model(s) installed:");
         models
           .sort((a, b) => b.size - a.size)
-          .forEach(m => console.log("  • " + m.name.padEnd(40) + gb(m.size).padStart(10) + "  " + (m.details?.parameter_size || "") + " " + (m.details?.quantization_level || "")));
+          .forEach(m => console.log("  - " + m.name.padEnd(40) + gb(m.size).padStart(10) + "  " + (m.details?.parameter_size || "") + " " + (m.details?.quantization_level || "")));
     - type: tests
       code: |-
         test("Status 200", function () {
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Liste der Modelle", function () {
+        test("List of models", function () {
           expect(res.getBody().models).to.be.an("array");
         });
 
-        test("Standard-Modell ist installiert", function () {
+        test("Default model is installed", function () {
           const wanted = bru.interpolate("{{model}}");
           const names = res.getBody().models.map(m => m.name);
           const found = names.some(n => n === wanted || n === wanted + ":latest");
-          if (!found) console.warn("⚠️ " + wanted + " fehlt – 'Pull Model' ausführen!");
+          if (!found) console.warn(wanted + " is missing - run 'Pull Model'!");
           expect(found).to.equal(true);
         });
   assertions:
@@ -52,7 +52,7 @@ settings:
 docs: |-
   # List Local Models
 
-  `GET /api/tags` – Alle lokal installierten Modelle.
+  `GET /api/tags` - All locally installed models.
 
   ## Response
 
@@ -77,4 +77,4 @@ docs: |-
   }
   ```
 
-  Das After-Response-Script gibt eine sortierte Übersicht in der Konsole aus.
+  The after-response script prints a sorted overview to the console.

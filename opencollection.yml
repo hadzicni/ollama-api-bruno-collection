@@ -23,8 +23,8 @@ request:
   scripts:
     - type: after-response
       code: |-
-        // Performance-Statistik für alle nativen Ollama-Antworten (non-streaming).
-        // Ergebnis landet in der Konsole und in der Laufzeitvariable "lastTokensPerSecond".
+        // Performance stats for all native Ollama responses (non-streaming).
+        // Printed to the console and stored in the runtime variable "lastTokensPerSecond".
         const body = res.getBody();
         if (body && typeof body === "object" && body.eval_count && body.eval_duration) {
           const seconds = body.eval_duration / 1e9;
@@ -35,72 +35,72 @@ request:
 
           bru.setVar("lastTokensPerSecond", tps.toFixed(1));
           console.log(
-            "⚡ " + body.model + ": " + body.eval_count + " Tokens in " + seconds.toFixed(2) + "s → " +
+            body.model + ": " + body.eval_count + " tokens in " + seconds.toFixed(2) + "s -> " +
             tps.toFixed(1) + " tok/s" +
-            (promptTps ? " | Prompt: " + body.prompt_eval_count + " Tokens @ " + promptTps.toFixed(1) + " tok/s" : "") +
+            (promptTps ? " | Prompt: " + body.prompt_eval_count + " tokens @ " + promptTps.toFixed(1) + " tok/s" : "") +
             (body.load_duration ? " | Load: " + (body.load_duration / 1e9).toFixed(2) + "s" : "")
           );
         }
 
 docs:
   content: |-
-    # 🦙 Ollama API – Bruno Collection
+    # Ollama API - Bruno Collection
 
-    Eine umfassende Collection für die **Ollama REST API** – lokal, im Netzwerk oder über **Ollama Cloud**.
+    A comprehensive collection for the **Ollama REST API** - local, on your network, or via **Ollama Cloud**.
 
-    ## 🚀 Schnellstart
+    ## Quick Start
 
-    1. Ollama starten: `ollama serve` (oder die Ollama-App öffnen)
-    2. Oben rechts die Umgebung **Local** auswählen
-    3. Benötigte Modelle laden (einmalig):
+    1. Start Ollama: `ollama serve` (or open the Ollama app)
+    2. Select the **Local** environment in the top right
+    3. Pull the required models (one-time):
 
     ```bash
-    ollama pull llama3.2        # {{model}}         – Standard-Chatmodell
-    ollama pull qwen3           # {{thinkingModel}} / {{toolModel}} – Thinking & Tools
-    ollama pull gpt-oss:20b     # {{reasoningModel}} – Reasoning-Level (low/medium/high)
-    ollama pull gemma3          # {{visionModel}}   – Bilderkennung
-    ollama pull embeddinggemma  # {{embedModel}}    – Embeddings
-    ollama pull qwen2.5-coder   # {{codeModel}}     – Code / Fill-in-the-Middle
+    ollama pull llama3.2        # {{model}}          - default chat model
+    ollama pull qwen3           # {{thinkingModel}} / {{toolModel}} - thinking & tools
+    ollama pull gpt-oss:20b     # {{reasoningModel}} - reasoning levels (low/medium/high)
+    ollama pull gemma3          # {{visionModel}}    - vision
+    ollama pull embeddinggemma  # {{embedModel}}     - embeddings
+    ollama pull qwen2.5-coder   # {{codeModel}}      - code / fill-in-the-middle
     ```
 
-    Alternativ: **Models → Pull Model** direkt aus Bruno ausführen.
+    Alternatively run **Models > Pull Model** directly from Bruno.
 
-    ## 📁 Aufbau
+    ## Structure
 
-    | Ordner | Inhalt |
+    | Folder | Contents |
     |---|---|
-    | 🖥️ Server | Health-Check, Version, Status, Account |
-    | ✍️ Generate | `/api/generate` – Completion, JSON, Thinking, Vision, FIM, Logprobs … |
-    | 💬 Chat | `/api/chat` – Konversationen, Tools, Structured Outputs, Vision … |
-    | 🧮 Embeddings | `/api/embed` & Legacy `/api/embeddings` |
-    | 📦 Models | Tags, PS, Show, Pull, Push, Copy, Create, Delete, Blobs |
-    | 🔌 OpenAI Compatibility | `/v1/chat/completions`, `/v1/responses`, `/v1/embeddings` … |
-    | 🅰️ Anthropic Compatibility | `/v1/messages` inkl. Tools, Thinking & Vision |
-    | ☁️ Cloud & Web Search | `ollama.com` API, Web Search, Web Fetch |
-    | 🔁 Workflows | Verkettete Abläufe: Chat-Verlauf, Tool-Loop, Mini-RAG, Modell-Lebenszyklus |
+    | Server | Health check, version, status, account |
+    | Generate | `/api/generate` - completion, JSON, thinking, vision, FIM, logprobs, ... |
+    | Chat | `/api/chat` - conversations, tools, structured outputs, vision, ... |
+    | Embeddings | `/api/embed` and legacy `/api/embeddings` |
+    | Models | Tags, PS, show, pull, push, copy, create, delete, blobs |
+    | OpenAI Compatibility | `/v1/chat/completions`, `/v1/responses`, `/v1/embeddings`, ... |
+    | Anthropic Compatibility | `/v1/messages` incl. tools, thinking and vision |
+    | Cloud & Web Search | `ollama.com` API, web search, web fetch |
+    | Workflows | Chained flows: chat history, mini RAG, model lifecycle |
 
-    ## 🌍 Umgebungen
+    ## Environments
 
-    - **Local** – `http://localhost:11434`
-    - **Remote Server** – Ollama auf einem anderen Rechner (`OLLAMA_HOST=0.0.0.0` setzen)
-    - **Ollama Cloud** – `https://ollama.com` mit API-Key (Secret `apiKey`)
+    - **Local** - `http://localhost:11434`
+    - **Remote Server** - Ollama on another machine (set `OLLAMA_HOST=0.0.0.0`)
+    - **Ollama Cloud** - `https://ollama.com` with an API key (secret `apiKey`)
 
-    Für **Web Search / Web Fetch / Cloud** wird ein API-Key benötigt: <https://ollama.com/settings/keys>
-    → in der Umgebung als Secret `ollamaCloudApiKey` eintragen.
+    **Web search, web fetch and cloud** requests require an API key: <https://ollama.com/settings/keys>
+    Add it to the environment as the secret `ollamaCloudApiKey`.
 
-    ## ✨ Features der Collection
+    ## Collection Features
 
-    - **Tests & Assertions** in fast jedem Request (ideal für den *Collection Runner*)
-    - **Tokens/s-Statistik**: Nach jeder nativen Antwort wird die Generierungsgeschwindigkeit in der Konsole ausgegeben
-    - **Automatisches Bild-Laden** für Vision-Requests (Base64 via Pre-Request-Script)
-    - **Workflows** mit Variablen-Verkettung zwischen Requests
+    - **Tests and assertions** in almost every request (ideal for the *Collection Runner*)
+    - **Tokens/s stats**: generation speed is printed to the console after every native response
+    - **Automatic image loading** for vision requests (Base64 via pre-request script)
+    - **Workflows** that chain requests via runtime variables
 
-    ## ℹ️ Hinweise
+    ## Notes
 
-    - Timeouts sind deaktiviert (`timeout: 0`), da das Laden großer Modelle dauern kann.
-    - Standardmäßig wird `"stream": false` verwendet, damit Tests die komplette Antwort prüfen können. Die *Streaming*-Requests zeigen das NDJSON/SSE-Format.
-    - Vision-Scripts nutzen `axios` und `Buffer` – falls der Safe Mode dies blockiert, in den Collection-Settings auf **Developer Mode** umstellen.
-    - Offizielle Doku: <https://docs.ollama.com/api>
+    - Timeouts are disabled (`timeout: 0`) because loading large models can take a while.
+    - `"stream": false` is used by default so tests can inspect the complete response. The *Streaming* requests demonstrate the NDJSON/SSE format.
+    - Vision scripts use `axios` and `Buffer` - if Safe Mode blocks this, switch the collection to **Developer Mode**.
+    - Official docs: <https://docs.ollama.com/api>
   type: text/markdown
 bundled: false
 

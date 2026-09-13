@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{reasoningModel}}",
-        "prompt": "Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Was kostet der Ball?",
+        "prompt": "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?",
         "think": "high",
         "stream": false
       }
@@ -25,7 +25,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Antwort enthält Text", function () {
+        test("Response contains text", function () {
           expect(res.getBody().response).to.be.a("string").and.not.be.empty;
         });
 
@@ -39,10 +39,10 @@ settings:
 docs: |-
   # Generate (Thinking Level)
 
-  Einige Modelle (z. B. **gpt-oss**) unterstützen Reasoning-Stufen statt eines Booleans:
+  Some models (e.g. **gpt-oss**) support reasoning levels instead of a boolean:
 
   ```json
   "think": "low" | "medium" | "high"
   ```
 
-  Höhere Stufen = längeres Nachdenken = bessere Antworten bei komplexen Aufgaben, aber langsamer.
+  Higher levels = longer thinking = better answers on complex tasks, but slower.

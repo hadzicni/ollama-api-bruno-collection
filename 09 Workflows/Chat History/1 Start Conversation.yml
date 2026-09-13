@@ -1,5 +1,5 @@
 info:
-  name: 1 · Unterhaltung starten
+  name: 1. Start Conversation
   type: http
   seq: 1
 
@@ -21,8 +21,8 @@ runtime:
     - type: before-request
       code: |-
         const history = [
-          { role: "system", content: "Du bist ein geduldiger Lehrer für Astronomie. Antworte kurz (max. 4 Sätze)." },
-          { role: "user", content: "Warum hat der Mars eine rote Farbe?" }
+          { role: "system", content: "You are a patient astronomy teacher. Keep answers short (max. 4 sentences)." },
+          { role: "user", content: "Why is Mars red?" }
         ];
         bru.setVar("chatHistory", JSON.stringify(history));
 
@@ -36,7 +36,7 @@ runtime:
           const history = JSON.parse(bru.getVar("chatHistory"));
           history.push({ role: "assistant", content: msg.content });
           bru.setVar("chatHistory", JSON.stringify(history));
-          console.log("🤖 " + msg.content);
+          console.log("Assistant: " + msg.content);
         }
     - type: tests
       code: |-
@@ -44,7 +44,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Assistant-Nachricht vorhanden", function () {
+        test("Assistant message present", function () {
           const msg = res.getBody().message;
           expect(msg.role).to.equal("assistant");
           expect(msg.content).to.be.a("string");

@@ -22,10 +22,10 @@ runtime:
         if (b?.details) {
           const info = b.model_info || {};
           const arch = info["general.architecture"];
-          console.log("🔎 " + bru.interpolate("{{model}}"));
-          console.log("   Familie:      " + b.details.family + " (" + b.details.parameter_size + ", " + b.details.quantization_level + ")");
-          console.log("   Fähigkeiten:  " + (b.capabilities || []).join(", "));
-          if (arch) console.log("   Max. Kontext: " + info[arch + ".context_length"]);
+          console.log(bru.interpolate("{{model}}"));
+          console.log("   Family:       " + b.details.family + " (" + b.details.parameter_size + ", " + b.details.quantization_level + ")");
+          console.log("   Capabilities: " + (b.capabilities || []).join(", "));
+          if (arch) console.log("   Max context:  " + info[arch + ".context_length"]);
         }
     - type: tests
       code: |-
@@ -33,7 +33,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Details enthalten", function () {
+        test("Details included", function () {
           const b = res.getBody();
           expect(b).to.have.property("details");
           expect(b).to.have.property("capabilities");
@@ -49,16 +49,16 @@ settings:
 docs: |-
   # Show Model Details
 
-  `POST /api/show` – Modelfile, Template, Parameter, Lizenz, Architektur-Infos und **capabilities**.
+  `POST /api/show` - Modelfile, template, parameters, license, architecture info and **capabilities**.
 
-  ## Response (gekürzt)
+  ## Response (abridged)
 
   ```json
   {
     "parameters": "temperature 0.7\nnum_ctx 2048",
-    "license": "…",
+    "license": "...",
     "modified_at": "2025-10-03T14:05:21.123456789+02:00",
-    "template": "{{- if .System }}…",
+    "template": "{{- if .System }}...",
     "details": { "format": "gguf", "family": "llama", "parameter_size": "3.2B", "quantization_level": "Q4_K_M" },
     "model_info": {
       "general.architecture": "llama",
@@ -70,4 +70,4 @@ docs: |-
   }
   ```
 
-  Mögliche `capabilities`: `completion`, `tools`, `insert`, `vision`, `embedding`, `thinking`.
+  Possible `capabilities`: `completion`, `tools`, `insert`, `vision`, `embedding`, `thinking`.

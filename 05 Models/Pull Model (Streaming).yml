@@ -23,7 +23,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Stream liefert NDJSON", function () {
+        test("Stream returns NDJSON", function () {
           expect(res.getHeader("content-type")).to.contain("application/x-ndjson");
         });
 
@@ -37,15 +37,15 @@ settings:
 docs: |-
   # Pull Model (Streaming Progress)
 
-  Der Stream liefert Fortschrittsmeldungen:
+  The stream returns progress updates:
 
   ```
   {"status":"pulling manifest"}
-  {"status":"pulling dde5aa3fc5ff","digest":"sha256:dde5…","total":2019377376,"completed":241970}
-  …
+  {"status":"pulling dde5aa3fc5ff","digest":"sha256:dde5...","total":2019377376,"completed":241970}
+  ...
   {"status":"verifying sha256 digest"}
   {"status":"writing manifest"}
   {"status":"success"}
   ```
 
-  Fortschritt in % = `completed / total * 100`.
+  Progress in % = `completed / total * 100`.

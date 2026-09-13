@@ -33,6 +33,6 @@ settings:
 docs: |-
   # Show Model Details (Verbose)
 
-  `verbose: true` liefert zusätzlich große Felder in `model_info` (z. B. die komplette Tokenizer-Vokabelliste).
+  `verbose: true` additionally returns large fields in `model_info` (e.g. the full tokenizer vocabulary).
 
-  ⚠️ Die Antwort kann **mehrere MB** groß sein.
+  Warning: the response can be **several MB** in size.

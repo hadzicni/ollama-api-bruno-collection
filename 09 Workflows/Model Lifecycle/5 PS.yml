@@ -1,5 +1,5 @@
 info:
-  name: 5 · Check Running
+  name: 5. Check Running
   type: http
   seq: 5
 
@@ -16,7 +16,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Testmodell ist geladen", function () {
+        test("Test model is loaded", function () {
           const names = res.getBody().models.map(m => m.name);
           expect(names.some(n => n.startsWith("bruno-lifecycle-test"))).to.equal(true);
         });

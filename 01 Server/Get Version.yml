@@ -15,7 +15,7 @@ runtime:
         const version = res.getBody()?.version;
         if (version) {
           bru.setVar("ollamaVersion", version);
-          console.log("🦙 Ollama Version:", version);
+          console.log("Ollama version:", version);
         }
     - type: tests
       code: |-
@@ -23,7 +23,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Version im SemVer-Format", function () {
+        test("Version is SemVer formatted", function () {
           expect(res.getBody().version).to.match(/^\d+\.\d+\.\d+/);
         });
   assertions:
@@ -43,7 +43,7 @@ settings:
 docs: |-
   # Get Version
 
-  `GET /api/version` – Gibt die installierte Ollama-Version zurück.
+  `GET /api/version` - Returns the installed Ollama version.
 
   ## Response
 
@@ -51,4 +51,4 @@ docs: |-
   { "version": "0.12.6" }
   ```
 
-  Die Version wird zusätzlich in der Laufzeitvariable `ollamaVersion` gespeichert.
+  The version is also stored in the runtime variable `ollamaVersion`.

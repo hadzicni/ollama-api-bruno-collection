@@ -35,16 +35,16 @@ settings:
 docs: |-
   # Create Model (Quantize)
 
-  Quantisiert ein **FP16/FP32**-Modell. Bereits quantisierte Modelle können nicht erneut quantisiert werden.
+  Quantizes an **FP16/FP32** model. Models that are already quantized cannot be quantized again.
 
-  Beispiel-Stream:
+  Example stream:
 
   ```
   {"status":"quantizing F16 model to Q4_K_M","digest":"0","total":6433687776,"completed":12302}
-  …
+  ...
   {"status":"success"}
   ```
 
-  Unterstützte Stufen u. a.: `q4_K_M`, `q4_K_S`, `q8_0`.
+  Supported levels include `q4_K_M`, `q4_K_S` and `q8_0`.
 
-  ⚠️ Setzt voraus, dass `llama3.2:3b-instruct-fp16` (~6,4 GB) lokal vorhanden ist.
+  Requires `llama3.2:3b-instruct-fp16` (~6.4 GB) to be available locally.

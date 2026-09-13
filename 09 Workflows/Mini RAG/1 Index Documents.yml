@@ -1,5 +1,5 @@
 info:
-  name: 1 · Dokumente indexieren
+  name: 1. Index Documents
   type: http
   seq: 1
 
@@ -12,12 +12,12 @@ http:
       {
         "model": "{{embedModel}}",
         "input": [
-          "Die Firma Lamatech wurde 2019 in Graz gegründet und beschäftigt 48 Mitarbeitende.",
-          "Der Support von Lamatech ist montags bis freitags von 8 bis 17 Uhr unter support@lamatech.example erreichbar.",
-          "Das Produkt \"HerdBox\" ist ein On-Premise-Server für LLMs mit 2 GPUs und kostet 12.900 Euro.",
-          "Mitarbeitende von Lamatech haben 30 Urlaubstage pro Jahr und dürfen bis zu 3 Tage pro Woche remote arbeiten.",
-          "Die HerdBox wird mit vorinstalliertem Ollama ausgeliefert und hat 3 Jahre Garantie.",
-          "Lamatech plant 2026 eine Niederlassung in Zürich."
+          "Lamatech was founded in 2019 in Graz and has 48 employees.",
+          "Lamatech support is available Monday to Friday from 8 am to 5 pm at support@lamatech.example.",
+          "The \"HerdBox\" product is an on-premise LLM server with 2 GPUs and costs 12,900 euros.",
+          "Lamatech employees get 30 days of vacation per year and may work remotely up to 3 days per week.",
+          "The HerdBox ships with Ollama preinstalled and comes with a 3-year warranty.",
+          "Lamatech plans to open an office in Zurich in 2026."
         ]
       }
   auth: inherit
@@ -30,7 +30,7 @@ runtime:
         const embeddings = res.getBody()?.embeddings;
         if (embeddings) {
           bru.setVar("ragIndex", JSON.stringify(docs.map((text, i) => ({ text, embedding: embeddings[i] }))));
-          console.log("🗂️ " + docs.length + " Dokumente indexiert (" + embeddings[0].length + " Dimensionen)");
+          console.log("Indexed " + docs.length + " documents (" + embeddings[0].length + " dimensions)");
         }
     - type: tests
       code: |-
@@ -38,7 +38,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Ein Embedding pro Dokument", function () {
+        test("One embedding per document", function () {
           expect(res.getBody().embeddings).to.have.lengthOf(req.getBody().input.length);
         });
 

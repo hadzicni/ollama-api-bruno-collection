@@ -34,9 +34,9 @@ settings:
 docs: |-
   # Push Model
 
-  `POST /api/push` – Lädt ein Modell in die Ollama-Registry hoch.
+  `POST /api/push` - Uploads a model to the Ollama registry.
 
-  Voraussetzungen:
-  1. Account auf [ollama.com](https://ollama.com) und `ollama signin` bzw. Public Key unter *Settings → Keys* hinterlegt
-  2. Modell im Namespace `<username>/<model>` – ggf. vorher per *Copy Model* umbenennen:
+  Prerequisites:
+  1. An account on [ollama.com](https://ollama.com) and `ollama signin`, or your public key added under *Settings > Keys*
+  2. The model in the `<username>/<model>` namespace - rename it first via *Copy Model* if needed:
      `{"source": "{{customModelName}}", "destination": "{{ollamaUsername}}/{{customModelName}}"}`

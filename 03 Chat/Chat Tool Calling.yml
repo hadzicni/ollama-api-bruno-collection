@@ -14,7 +14,7 @@ http:
         "messages": [
           {
             "role": "user",
-            "content": "Wie ist das Wetter gerade in Zürich und wie spät ist es dort?"
+            "content": "What is the weather like in Zurich right now, and what time is it there?"
           }
         ],
         "tools": [
@@ -22,13 +22,13 @@ http:
             "type": "function",
             "function": {
               "name": "get_current_weather",
-              "description": "Liefert das aktuelle Wetter für eine Stadt",
+              "description": "Get the current weather for a city",
               "parameters": {
                 "type": "object",
                 "properties": {
                   "city": {
                     "type": "string",
-                    "description": "Name der Stadt, z. B. Berlin"
+                    "description": "Name of the city, e.g. Berlin"
                   },
                   "unit": {
                     "type": "string",
@@ -36,7 +36,7 @@ http:
                       "celsius",
                       "fahrenheit"
                     ],
-                    "description": "Temperatureinheit"
+                    "description": "Temperature unit"
                   }
                 },
                 "required": [
@@ -49,13 +49,13 @@ http:
             "type": "function",
             "function": {
               "name": "get_current_time",
-              "description": "Liefert die aktuelle Uhrzeit in einer Zeitzone",
+              "description": "Get the current time in a time zone",
               "parameters": {
                 "type": "object",
                 "properties": {
                   "timezone": {
                     "type": "string",
-                    "description": "IANA-Zeitzone, z. B. Europe/Berlin"
+                    "description": "IANA time zone, e.g. Europe/Berlin"
                   }
                 },
                 "required": [
@@ -77,9 +77,9 @@ runtime:
         if (msg?.tool_calls?.length) {
           bru.setVar("toolCallMessage", JSON.stringify(msg));
           msg.tool_calls.forEach(function (c) {
-            console.log("🔧 Tool-Call:", c.function.name, JSON.stringify(c.function.arguments));
+            console.log("Tool call:", c.function.name, JSON.stringify(c.function.arguments));
           });
-          console.log("➡️ Jetzt 'Chat (Tool Result)' ausführen, um die Ergebnisse zurückzugeben.");
+          console.log("Next: run 'Chat (Tool Result)' to send the results back.");
         }
     - type: tests
       code: |-
@@ -87,7 +87,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Modell ruft Tools auf", function () {
+        test("Model calls tools", function () {
           const calls = res.getBody().message.tool_calls;
           expect(calls).to.be.an("array").and.not.be.empty;
           expect(calls[0].function).to.have.property("name");
@@ -104,18 +104,18 @@ settings:
 docs: |-
   # Chat (Tool Calling)
 
-  `tools` beschreibt Funktionen per JSON-Schema. Entscheidet sich das Modell für einen Aufruf, enthält die Antwort:
+  `tools` describes functions via JSON schema. When the model decides to call one, the response contains:
 
   ```json
   "message": {
     "role": "assistant",
     "content": "",
     "tool_calls": [
-      { "function": { "name": "get_current_weather", "arguments": { "city": "Zürich" } } }
+      { "function": { "name": "get_current_weather", "arguments": { "city": "Zurich" } } }
     ]
   }
   ```
 
-  Die Assistant-Nachricht wird in `toolCallMessage` gespeichert → weiter mit **Chat (Tool Result)**.
+  The assistant message is stored in `toolCallMessage` -> continue with **Chat (Tool Result)**.
 
-  Geeignete Modelle: `qwen3`, `llama3.1`, `gpt-oss`, `mistral-small3.2` …
+  Suitable models: `qwen3`, `llama3.1`, `gpt-oss`, `mistral-small3.2`, ...

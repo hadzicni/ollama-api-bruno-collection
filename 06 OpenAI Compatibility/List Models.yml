@@ -16,7 +16,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("OpenAI-Listenformat", function () {
+        test("OpenAI list format", function () {
           const b = res.getBody();
           expect(b.object).to.equal("list");
           expect(b.data).to.be.an("array");

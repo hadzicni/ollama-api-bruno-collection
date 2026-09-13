@@ -32,9 +32,9 @@ settings:
 docs: |-
   # Delete Model
 
-  `DELETE /api/delete` – Entfernt ein Modell und nicht mehr referenzierte Layer.
+  `DELETE /api/delete` - Removes a model and any layers that are no longer referenced.
 
-  Standardmäßig wird `{{copyModelName}}` gelöscht (aus *Copy Model*). Zum Aufräumen auch
-  `{{customModelName}}` und `{{customModelName}}-raw` eintragen.
+  By default `{{copyModelName}}` is deleted (from *Copy Model*). To clean up, also enter
+  `{{customModelName}}` and `{{customModelName}}-raw`.
 
-  Antwort: `200 OK` bzw. `404`, wenn das Modell nicht existiert.
+  Response: `200 OK`, or `404` if the model does not exist.

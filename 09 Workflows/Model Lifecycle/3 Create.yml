@@ -1,5 +1,5 @@
 info:
-  name: 3 · Create Custom Model
+  name: 3. Create Custom Model
   type: http
   seq: 3
 
@@ -29,7 +29,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Create erfolgreich", function () {
+        test("Create succeeded", function () {
           expect(res.getBody().status).to.equal("success");
         });
 

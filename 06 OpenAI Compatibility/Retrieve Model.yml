@@ -16,7 +16,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Modell-Objekt", function () {
+        test("Model object", function () {
           expect(res.getBody().object).to.equal("model");
         });
 

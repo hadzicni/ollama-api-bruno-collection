@@ -16,7 +16,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Ollama läuft", function () {
+        test("Ollama is running", function () {
           expect(res.getBody()).to.contain("Ollama is running");
         });
 
@@ -30,6 +30,6 @@ settings:
 docs: |-
   # Health Check
 
-  `GET /` – Liefert `Ollama is running` als Plain Text, wenn der Server erreichbar ist.
+  `GET /` - Returns `Ollama is running` as plain text when the server is reachable.
 
-  Ideal für Liveness-Probes (z. B. Docker/Kubernetes). Alternativ `HEAD /` für einen Check ohne Body.
+  Ideal for liveness probes (e.g. Docker/Kubernetes). Use `HEAD /` for a check without a body.

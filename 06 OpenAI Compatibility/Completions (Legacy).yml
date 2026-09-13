@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{model}}",
-        "prompt": "Es war einmal ein kleines Lama, das",
+        "prompt": "Once upon a time there was a little llama who",
         "max_tokens": 100,
         "temperature": 0.8,
         "stop": [
@@ -28,7 +28,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Text-Completion", function () {
+        test("Text completion", function () {
           const b = res.getBody();
           expect(b.object).to.equal("text_completion");
           expect(b.choices[0].text).to.be.a("string");
@@ -44,5 +44,5 @@ settings:
 docs: |-
   # Completions (Legacy)
 
-  Klassischer Text-Completion-Endpunkt. Unterstützt u. a. `prompt`, `max_tokens`, `temperature`, `top_p`,
-  `stop`, `seed`, `suffix`, `stream`, `frequency_penalty`, `presence_penalty`.
+  Classic text completion endpoint. Supports `prompt`, `max_tokens`, `temperature`, `top_p`,
+  `stop`, `seed`, `suffix`, `stream`, `frequency_penalty`, `presence_penalty` and more.

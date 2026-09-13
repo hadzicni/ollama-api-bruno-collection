@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "model": "{{model}}",
-        "prompt": "Vervollständige: Der Himmel ist",
+        "prompt": "Complete the sentence: The sky is",
         "stream": false,
         "logprobs": true,
         "top_logprobs": 3,
@@ -30,7 +30,7 @@ runtime:
         if (Array.isArray(lp)) {
           lp.forEach(function (t) {
             const alts = (t.top_logprobs || []).map(a => JSON.stringify(a.token) + " " + (Math.exp(a.logprob) * 100).toFixed(1) + "%").join(", ");
-            console.log(JSON.stringify(t.token), (Math.exp(t.logprob) * 100).toFixed(1) + "%", "| Alternativen:", alts);
+            console.log(JSON.stringify(t.token), (Math.exp(t.logprob) * 100).toFixed(1) + "%", "| Alternatives:", alts);
           });
         }
     - type: tests
@@ -39,7 +39,7 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
-        test("Logprobs enthalten", function () {
+        test("Logprobs included", function () {
           const lp = res.getBody().logprobs;
           expect(lp).to.be.an("array").and.not.be.empty;
           expect(lp[0]).to.have.property("token");
@@ -56,6 +56,6 @@ settings:
 docs: |-
   # Generate (Logprobs)
 
-  `logprobs: true` liefert zu jedem Token die Log-Wahrscheinlichkeit, `top_logprobs` die N besten Alternativen.
+  `logprobs: true` returns the log probability of every token, `top_logprobs` the N best alternatives.
 
-  Das After-Response-Script rechnet sie in Prozent um und schreibt sie in die Konsole.
+  The after-response script converts them to percentages and prints them to the console.
